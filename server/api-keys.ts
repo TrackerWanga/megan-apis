@@ -28,6 +28,36 @@ function generateKey(prefix = "megan"): string {
 }
 
 export function registerApiKeyRoutes(app: Express) {
+  // Public key generation
+  app.post("/api/keys/generate", async (req: Request, res: Response) => {
+    try {
+      const { name } = req.body || {};
+      const apikey = generateKey();
+      await d1Query(
+        "INSERT INTO api_keys (key, name, rate_limit, active) VALUES (?, ?, 50, 1)",
+        [apikey, name || "Free User"]
+      );
+      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Free User", rate_limit: 50 } });
+    } catch (e: any) {
+      return res.status(500).json({ success: false, error: e.message });
+    }
+  });
+
+  // PUBLIC: Check key info and usage (no admin auth needed)
+  app.get("/api/keys/:key/info", async (req: Request, res: Response) => {
+    try {
+      const { key } = req.params;
+      const keyData = await d1Query("SELECT key, name, rate_limit, active, created_at FROM api_keys WHERE key = ?", [key]);
+      if (!keyData.length) return res.status(404).json({ success: false, error: "Key not found" });
+      const today = new Date().toISOString().split("T")[0];
+      const usage = await d1Query("SELECT count FROM usage WHERE api_key = ? AND date = ?", [key, today]);
+      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: keyData[0], usage: { today: usage[0]?.count || 0 } });
+    } catch (e: any) {
+      return res.status(500).json({ success: false, error: e.message });
+    }
+  });
+
+  // Admin: Generate key
   app.post("/api/admin/keys/generate", async (req: Request, res: Response) => {
     try {
       const { name, rate_limit = 50, userId } = req.body || {};
@@ -42,6 +72,7 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
+  // Admin: List keys
   app.get("/api/admin/keys", async (_req: Request, res: Response) => {
     try {
       const keys = await d1Query("SELECT * FROM api_keys ORDER BY created_at DESC");
@@ -51,6 +82,7 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
+  // Admin: Update key
   app.post("/api/admin/keys/:key/update", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
@@ -65,6 +97,7 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
+  // Admin: Revoke key
   app.delete("/api/admin/keys/:key", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
@@ -75,6 +108,7 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
+  // Admin: Key usage
   app.get("/api/admin/keys/:key/usage", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
@@ -87,27 +121,13 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
+  // Login
   app.post("/api/keys/login", async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body || {};
       const user = await d1Query("SELECT * FROM users WHERE email = ? AND password = ? AND active = 1", [email, password]);
       if (!user.length) return res.status(401).json({ success: false, error: "Invalid credentials" });
       return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", user: { username: user[0].username, api_key: user[0].api_key, coins: user[0].coins, is_admin: !!user[0].is_admin } });
-    } catch (e: any) {
-      return res.status(500).json({ success: false, error: e.message });
-    }
-  });
-
-  // Public key generation — no user foreign key needed
-  app.post("/api/keys/generate", async (req: Request, res: Response) => {
-    try {
-      const { name } = req.body || {};
-      const apikey = generateKey();
-      await d1Query(
-        "INSERT INTO api_keys (key, name, rate_limit, active) VALUES (?, ?, 50, 1)",
-        [apikey, name || "Free User"]
-      );
-      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Free User", rate_limit: 50 } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
