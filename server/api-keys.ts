@@ -28,7 +28,6 @@ function generateKey(prefix = "megan"): string {
 }
 
 export function registerApiKeyRoutes(app: Express) {
-  // Generate a new API key (admin only)
   app.post("/api/admin/keys/generate", async (req: Request, res: Response) => {
     try {
       const { name, rate_limit = 50, userId } = req.body || {};
@@ -43,7 +42,6 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // List all API keys (admin only)
   app.get("/api/admin/keys", async (_req: Request, res: Response) => {
     try {
       const keys = await d1Query("SELECT * FROM api_keys ORDER BY created_at DESC");
@@ -53,7 +51,6 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // Update key limit or toggle active (admin only)
   app.post("/api/admin/keys/:key/update", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
@@ -68,7 +65,6 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // Revoke a key (admin only)
   app.delete("/api/admin/keys/:key", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
@@ -79,20 +75,18 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // Get usage stats for a key (admin only)
   app.get("/api/admin/keys/:key/usage", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
       const today = new Date().toISOString().split("T")[0];
-      const usage = await d1Query("SELECT * FROM usage WHERE api_key = ? AND date = ?", [key, today]);
+      const todayUsage = await d1Query("SELECT count FROM usage WHERE api_key = ? AND date = ?", [key, today]);
       const total = await d1Query("SELECT SUM(count) as total FROM usage WHERE api_key = ?", [key]);
-      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", today: usage[0]?.count || 0, total: total[0]?.total || 0 });
+      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", today: todayUsage[0]?.count || 0, total: total[0]?.total || 0 });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
   });
 
-  // Admin login (returns master key for admin API access)
   app.post("/api/keys/login", async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body || {};
@@ -104,12 +98,15 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // Public key generation (self-service)
+  // Public key generation — no user foreign key needed
   app.post("/api/keys/generate", async (req: Request, res: Response) => {
     try {
       const { name } = req.body || {};
       const apikey = generateKey();
-      await d1Query("INSERT INTO api_keys (key, name, rate_limit, active, created_by) VALUES (?, ?, 50, 1, 'public')", [apikey, name || "Free User"]);
+      await d1Query(
+        "INSERT INTO api_keys (key, name, rate_limit, active) VALUES (?, ?, 50, 1)",
+        [apikey, name || "Free User"]
+      );
       return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Free User", rate_limit: 50 } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
