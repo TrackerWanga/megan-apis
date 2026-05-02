@@ -31,11 +31,11 @@ export function registerApiKeyRoutes(app: Express) {
   // Admin generates a key
   app.post("/api/admin/keys/generate", async (req: Request, res: Response) => {
     try {
-      const { name, limit = 50, userId } = req.body || {};
+      const { name, rate_limit = 50, userId } = req.body || {};
       const apikey = generateKey();
       const id = `key_${Date.now()}`;
       await d1Query(
-        "INSERT INTO api_keys (key, user_id, name, limit, active, created_by) VALUES (?, ?, ?, ?, true, ?)",
+        "INSERT INTO api_keys (key, user_id, name, rate_rate_limit, active, created_by) VALUES (?, ?, ?, ?, true, ?)",
         [apikey, userId || null, name || "Untitled", limit, "admin_001"]
       );
       return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Untitled", limit } });
@@ -58,8 +58,8 @@ export function registerApiKeyRoutes(app: Express) {
   app.post("/api/admin/keys/:key/update", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
-      const { limit, active, name } = req.body || {};
-      if (limit !== undefined) await d1Query("UPDATE api_keys SET limit = ? WHERE key = ?", [limit, key]);
+      const { rate_limit, active, name } = req.body || {};
+      if (limit !== undefined) await d1Query("UPDATE api_keys SET rate_limit = ? WHERE key = ?", [limit, key]);
       if (active !== undefined) await d1Query("UPDATE api_keys SET active = ? WHERE key = ?", [active ? 1 : 0, key]);
       if (name) await d1Query("UPDATE api_keys SET name = ? WHERE key = ?", [name, key]);
       const updated = await d1Query("SELECT * FROM api_keys WHERE key = ?", [key]);
@@ -110,8 +110,8 @@ export function registerApiKeyRoutes(app: Express) {
     try {
       const { name } = req.body || {};
       const apikey = generateKey();
-      await d1Query("INSERT INTO api_keys (key, name, limit, active, created_by) VALUES (?, ?, 50, true, 'public')", [apikey, name || "Free User"]);
-      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Free User", limit: 50 } });
+      await d1Query("INSERT INTO api_keys (key, name, rate_rate_limit, active, created_by) VALUES (?, ?, 50, true, 'public')", [apikey, name || "Free User"]);
+      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Free User", rate_limit: 50 } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }

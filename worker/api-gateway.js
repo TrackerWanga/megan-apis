@@ -65,9 +65,9 @@ export default {
     }
 
     // ─── Rate Limiting ──────────────────────────────────────────────────
-    const usage = await checkRateLimit(env.DB, apikey, keyData.limit);
-    if (usage >= keyData.limit) {
-      return corsResponse(JSON.stringify({ success: false, error: `Rate limit exceeded (${keyData.limit}/day). Resets at midnight UTC.`, limit: keyData.limit, usage, creator: "Megan APIs by Tracker Wanga | Falcon Tech" }), 429);
+    const usage = await checkRateLimit(env.DB, apikey, keyData.rate_limit);
+    if (usage >= keyData.rate_limit) {
+      return corsResponse(JSON.stringify({ success: false, error: `Rate limit exceeded (${keyData.rate_limit}/day). Resets at midnight UTC.`, limit: keyData.rate_limit, usage, creator: "Megan APIs by Tracker Wanga | Falcon Tech" }), 429);
     }
 
     await incrementUsage(env.DB, apikey);

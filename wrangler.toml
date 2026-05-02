@@ -5,7 +5,7 @@ compatibility_date = "2026-05-02"
 [[d1_databases]]
 binding = "DB"
 database_name = "megan-db"
-database_id = "YOUR_DATABASE_ID"
+database_id = "0d46ad04-712a-47fe-b855-eae8f7dd8ffc"
 
 [[kv_namespaces]]
 binding = "API_KEYS"
