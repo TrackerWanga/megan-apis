@@ -1,0 +1,12 @@
+name = "megan-apis-gateway"
+main = "worker/api-gateway.js"
+compatibility_date = "2026-05-02"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "megan-db"
+database_id = "YOUR_DATABASE_ID"
+
+[[kv_namespaces]]
+binding = "API_KEYS"
+id = "ba9e5448e4ce4c22ab87421f67db24df"
