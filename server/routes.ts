@@ -46,6 +46,7 @@ import { listTextproEffects, generateTextpro } from "../lib/downloaders/textpro"
 import { imageToSticker, stickerToImage, videoToSticker, stickerToVideo, videoToGif, gifToVideo } from "../lib/downloaders/converter";
 import { listAudioEffects, applyAudioEffect } from "../lib/downloaders/audio-effects";
 import { getSettings, saveSettings, loadSettings } from "./admin-settings";
+import { registerApiKeyRoutes } from "./api-keys";
 import { trackIpRequest, getSecurityStats, heavyLimiter, adminLimiter, loginLimiter } from "./security";
 
 // ─── Activity Tracking ────────────────────────────────────────────────────────
@@ -116,6 +117,7 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   registerAIRoutes(app);
+  registerApiKeyRoutes(app);
 
   // ─── Activity tracking middleware ──────────────────────────────────────────
   loadSettings();
