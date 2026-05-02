@@ -28,23 +28,22 @@ function generateKey(prefix = "megan"): string {
 }
 
 export function registerApiKeyRoutes(app: Express) {
-  // Admin generates a key
+  // Generate a new API key (admin only)
   app.post("/api/admin/keys/generate", async (req: Request, res: Response) => {
     try {
       const { name, rate_limit = 50, userId } = req.body || {};
       const apikey = generateKey();
-      const id = `key_${Date.now()}`;
       await d1Query(
-        "INSERT INTO api_keys (key, user_id, name, rate_rate_limit, active, created_by) VALUES (?, ?, ?, ?, true, ?)",
-        [apikey, userId || null, name || "Untitled", limit, "admin_001"]
+        "INSERT INTO api_keys (key, user_id, name, rate_limit, active, created_by) VALUES (?, ?, ?, ?, 1, ?)",
+        [apikey, userId || null, name || "Untitled", rate_limit, "admin_001"]
       );
-      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Untitled", limit } });
+      return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Untitled", rate_limit } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
   });
 
-  // List all keys
+  // List all API keys (admin only)
   app.get("/api/admin/keys", async (_req: Request, res: Response) => {
     try {
       const keys = await d1Query("SELECT * FROM api_keys ORDER BY created_at DESC");
@@ -54,12 +53,12 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // Update a key
+  // Update key limit or toggle active (admin only)
   app.post("/api/admin/keys/:key/update", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
       const { rate_limit, active, name } = req.body || {};
-      if (limit !== undefined) await d1Query("UPDATE api_keys SET rate_limit = ? WHERE key = ?", [limit, key]);
+      if (rate_limit !== undefined) await d1Query("UPDATE api_keys SET rate_limit = ? WHERE key = ?", [rate_limit, key]);
       if (active !== undefined) await d1Query("UPDATE api_keys SET active = ? WHERE key = ?", [active ? 1 : 0, key]);
       if (name) await d1Query("UPDATE api_keys SET name = ? WHERE key = ?", [name, key]);
       const updated = await d1Query("SELECT * FROM api_keys WHERE key = ?", [key]);
@@ -69,18 +68,18 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // Revoke a key
+  // Revoke a key (admin only)
   app.delete("/api/admin/keys/:key", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
-      await d1Query("UPDATE api_keys SET active = false WHERE key = ?", [key]);
+      await d1Query("UPDATE api_keys SET active = 0 WHERE key = ?", [key]);
       return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", message: `Key ${key} revoked` });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
   });
 
-  // Get usage stats for a key
+  // Get usage stats for a key (admin only)
   app.get("/api/admin/keys/:key/usage", async (req: Request, res: Response) => {
     try {
       const { key } = req.params;
@@ -97,7 +96,7 @@ export function registerApiKeyRoutes(app: Express) {
   app.post("/api/keys/login", async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body || {};
-      const user = await d1Query("SELECT * FROM users WHERE email = ? AND password = ? AND active = true", [email, password]);
+      const user = await d1Query("SELECT * FROM users WHERE email = ? AND password = ? AND active = 1", [email, password]);
       if (!user.length) return res.status(401).json({ success: false, error: "Invalid credentials" });
       return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", user: { username: user[0].username, api_key: user[0].api_key, coins: user[0].coins, is_admin: !!user[0].is_admin } });
     } catch (e: any) {
@@ -105,12 +104,12 @@ export function registerApiKeyRoutes(app: Express) {
     }
   });
 
-  // Public key generation (self-service — uses coin cost in future)
+  // Public key generation (self-service)
   app.post("/api/keys/generate", async (req: Request, res: Response) => {
     try {
       const { name } = req.body || {};
       const apikey = generateKey();
-      await d1Query("INSERT INTO api_keys (key, name, rate_rate_limit, active, created_by) VALUES (?, ?, 50, true, 'public')", [apikey, name || "Free User"]);
+      await d1Query("INSERT INTO api_keys (key, name, rate_limit, active, created_by) VALUES (?, ?, 50, 1, 'public')", [apikey, name || "Free User"]);
       return res.json({ success: true, creator: "Megan APIs by Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Free User", rate_limit: 50 } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
