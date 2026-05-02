@@ -56,7 +56,7 @@ export default {
     // ─── API Key Validation ─────────────────────────────────────────────
     const apikey = getApiKey(request);
     if (!apikey) {
-      return corsResponse(JSON.stringify({ success: false, error: "API key required. Get one at https://meganapis.space", creator: "Megan APIs by Tracker Wanga | Falcon Tech" }), 401);
+      return corsResponse(JSON.stringify({ success: false, error: "API key required. Get one at https://apis.megan.qzz.io", creator: "Megan APIs by Tracker Wanga | Falcon Tech" }), 401);
     }
 
     const keyData = await validateKey(env.DB, apikey);
