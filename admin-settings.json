@@ -1,0 +1,25 @@
+{
+  "password": "meganadmin2026",
+  "githubUrl": "https://github.com/TrackerWanga",
+  "repoCards": [
+    {
+      "id": "meganapis",
+      "name": "Megan APIs",
+      "url": "https://github.com/TrackerWanga/megan-apis",
+      "description": "Free REST API hub — 800+ endpoints. AI chat, social media downloads, image effects, OSINT tools. Powered by Falcon Tech.",
+      "badge": "Node.js + Express",
+      "display": "github.com/TrackerWanga/megan-apis",
+      "icon": "github"
+    },
+    {
+      "id": "falcontech",
+      "name": "Falcon Tech",
+      "url": "https://github.com/TrackerWanga",
+      "description": "Building tools and APIs for developers. Free, open-source, no keys required.",
+      "badge": "TECH STUDIO",
+      "display": "github.com/TrackerWanga",
+      "icon": "zap"
+    }
+  ],
+  "ipBlocklist": []
+}

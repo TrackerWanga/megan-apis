@@ -10,7 +10,6 @@ dist/
 .env.production
 
 # Runtime config (contains passwords)
-admin-settings.json
 
 # OS files
 .DS_Store
