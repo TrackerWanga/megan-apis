@@ -713,6 +713,76 @@ const audioFxEndpoints: ApiEndpoint[] = [
   })),
 ];
 
+
+const zodiacEndpoints: ApiEndpoint[] = [
+  { path: "/api/zodiac/all", method: "GET", description: "Get all 12 zodiac signs with full metadata and daily horoscopes", params: [], format: "json", category: "zodiac" },
+  { path: "/api/zodiac/:sign", method: "GET", description: "Get a specific zodiac sign with traits, compatibility, lucky numbers, career, and daily horoscope", params: [{ name: "sign", type: "string", required: true, description: "Zodiac sign", default: "aries" }], format: "json", category: "zodiac" },
+  { path: "/api/zodiac/element/:element", method: "GET", description: "Get zodiac signs by element (fire, earth, air, water)", params: [{ name: "element", type: "string", required: true, description: "Element", default: "fire" }], format: "json", category: "zodiac" },
+  { path: "/api/zodiac/compatibility/:s1/:s2", method: "GET", description: "Get compatibility score between two zodiac signs", params: [{ name: "s1", type: "string", required: true, description: "First sign", default: "aries" }, { name: "s2", type: "string", required: true, description: "Second sign", default: "leo" }], format: "json", category: "zodiac" },
+];
+
+const gamesEndpoints: ApiEndpoint[] = [
+  { path: "/api/game/rps", method: "GET", description: "Play Rock Paper Scissors against the computer", params: [{ name: "move", type: "string", required: true, description: "Your move", default: "rock" }], format: "json", category: "games" },
+  { path: "/api/game/flag-guess", method: "GET", description: "Guess the country from its flag and hint", params: [], format: "json", category: "games" },
+  { path: "/api/game/word-scramble", method: "GET", description: "Unscramble a word with hint", params: [], format: "json", category: "games" },
+  { path: "/api/game/number-guess", method: "GET", description: "Start a number guessing game (1-100, 7 attempts)", params: [], format: "json", category: "games" },
+  { path: "/api/game/number-guess/:id", method: "POST", description: "Submit a guess for number guessing game", params: [{ name: "guess", type: "number", required: true, description: "Your guess", default: "50" }], format: "json", category: "games" },
+];
+
+const educationEndpoints: ApiEndpoint[] = [
+  { path: "/api/education/papers", method: "GET", description: "Search 250M+ academic papers via OpenAlex", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "climate change" }, { name: "page", type: "number", required: false, description: "Page number", default: "1" }], format: "json", category: "education", provider: "OpenAlex" },
+  { path: "/api/education/books", method: "GET", description: "Search 20M+ books via Open Library", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "mathematics" }], format: "json", category: "education", provider: "Open Library" },
+  { path: "/api/education/dictionary", method: "GET", description: "Look up word with IPA, audio, definitions, synonyms", params: [{ name: "word", type: "string", required: true, description: "Word", default: "serendipity" }], format: "json", category: "education", provider: "Free Dictionary API" },
+  { path: "/api/education/book-details", method: "GET", description: "Get detailed book info by Open Library key", params: [{ name: "key", type: "string", required: true, description: "Book key", default: "OL8112804W" }], format: "json", category: "education", provider: "Open Library" },
+];
+
+const jobsEndpoints: ApiEndpoint[] = [
+  { path: "/api/jobs/kenya", method: "GET", description: "Get latest Kenyan job listings from BrighterMonday", params: [{ name: "page", type: "number", required: false, description: "Page number", default: "1" }], format: "json", category: "jobs", provider: "BrighterMonday" },
+];
+
+const cryptoEndpoints: ApiEndpoint[] = [
+  { path: "/api/crypto/price", method: "GET", description: "Get live crypto price in USD and KES", params: [{ name: "coin", type: "string", required: false, description: "Coin ID", default: "bitcoin" }], format: "json", category: "crypto", provider: "CoinGecko" },
+  { path: "/api/crypto/all", method: "GET", description: "Get top 10 cryptocurrency prices", params: [], format: "json", category: "crypto", provider: "CoinGecko" },
+];
+
+const forexEndpoints: ApiEndpoint[] = [
+  { path: "/api/forex/rates", method: "GET", description: "Get live exchange rates for major currencies", params: [], format: "json", category: "forex", provider: "ExchangeRate-API" },
+  { path: "/api/forex/convert", method: "GET", description: "Convert between any two currencies", params: [{ name: "amount", type: "number", required: false, description: "Amount", default: "100" }, { name: "from", type: "string", required: false, description: "From currency", default: "USD" }, { name: "to", type: "string", required: false, description: "To currency", default: "KES" }], format: "json", category: "forex", provider: "ExchangeRate-API" },
+];
+
+const devToolsEndpoints: ApiEndpoint[] = [
+  { path: "/api/tools/deobfuscate", method: "POST", description: "Deobfuscate JavaScript code", params: [{ name: "code", type: "string", required: true, description: "Obfuscated JS code", default: "var _0x1234=['hello','world']" }], format: "json", category: "dev-tools" },
+  { path: "/api/tools/deminify", method: "POST", description: "Expand minified code", params: [{ name: "code", type: "string", required: true, description: "Minified code", default: "function hello(a,b){return a+b}" }], format: "json", category: "dev-tools" },
+  { path: "/api/tools/run-js", method: "POST", description: "Run JavaScript in a secure sandbox", params: [{ name: "code", type: "string", required: true, description: "JS code", default: "console.log('Hello!')" }], format: "json", category: "dev-tools" },
+  { path: "/api/tools/headless", method: "GET", description: "Fetch URL like a real browser with cookies", params: [{ name: "url", type: "string", required: true, description: "URL", default: "https://example.com" }], format: "json", category: "dev-tools" },
+  { path: "/api/tools/decode", method: "POST", description: "Auto-detect and decode Base64/URL/Hex/JWT/ROT13", params: [{ name: "text", type: "string", required: true, description: "Encoded text", default: "SGVsbG8gV29ybGQ=" }], format: "json", category: "dev-tools" },
+];
+
+const scrapingEndpoints: ApiEndpoint[] = [
+  { path: "/api/scrape/links", method: "GET", description: "Extract all links from a website", params: [{ name: "url", type: "string", required: true, description: "URL", default: "https://example.com" }], format: "json", category: "scraping" },
+  { path: "/api/scrape/inspect", method: "GET", description: "Full website inspection", params: [{ name: "url", type: "string", required: true, description: "URL", default: "https://example.com" }], format: "json", category: "scraping" },
+  { path: "/api/scrape/scripts", method: "GET", description: "Extract all JavaScript from a page", params: [{ name: "url", type: "string", required: true, description: "URL", default: "https://example.com" }], format: "json", category: "scraping" },
+  { path: "/api/scrape/cookies", method: "GET", description: "Get all cookies from a website", params: [{ name: "url", type: "string", required: true, description: "URL", default: "https://example.com" }], format: "json", category: "scraping" },
+  { path: "/api/scrape/full", method: "POST", description: "Master scraper — everything from a page", params: [{ name: "url", type: "string", required: true, description: "URL", default: "https://example.com" }], format: "json", category: "scraping" },
+];
+
+const funDataEndpoints: ApiEndpoint[] = [
+  { path: "/api/fun-data/kenyan-proverb", method: "GET", description: "Random Kenyan proverb with meaning", params: [], format: "json", category: "fun-data" },
+  { path: "/api/fun-data/dad-joke", method: "GET", description: "Random clean dad joke", params: [], format: "json", category: "fun-data" },
+  { path: "/api/fun-data/affirmation", method: "GET", description: "Random positive daily affirmation", params: [], format: "json", category: "fun-data" },
+  { path: "/api/fun-data/swahili-phrase", method: "GET", description: "Random Swahili phrase with translation", params: [], format: "json", category: "fun-data" },
+  { path: "/api/fun-data/kenyan-proverbs", method: "GET", description: "All Kenyan proverbs", params: [], format: "json", category: "fun-data" },
+  { path: "/api/fun-data/swahili-phrases", method: "GET", description: "All Swahili phrases", params: [], format: "json", category: "fun-data" },
+];
+
+const metaEndpoints: ApiEndpoint[] = [
+  { path: "/api/status", method: "GET", description: "Server status — uptime, memory, CPU", params: [], format: "json", category: "meta" },
+  { path: "/api/endpoints/search", method: "GET", description: "Search all API endpoints by keyword", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "zodiac" }], format: "json", category: "meta" },
+  { path: "/api/endpoints/categories", method: "GET", description: "List all API categories with counts", params: [], format: "json", category: "meta" },
+  { path: "/api/endpoints/stats", method: "GET", description: "Endpoint statistics by method and category", params: [], format: "json", category: "meta" },
+];
+
+
 export const allEndpoints: ApiEndpoint[] = [
   ...aiChatEndpoints,
   ...aiToolEndpoints,
@@ -734,6 +804,16 @@ export const allEndpoints: ApiEndpoint[] = [
   ...textproEndpoints,
   ...converterEndpoints,
   ...audioFxEndpoints,
+  ...zodiacEndpoints,
+  ...gamesEndpoints,
+  ...educationEndpoints,
+  ...jobsEndpoints,
+  ...cryptoEndpoints,
+  ...forexEndpoints,
+  ...devToolsEndpoints,
+  ...scrapingEndpoints,
+  ...funDataEndpoints,
+  ...metaEndpoints,
 ];
 
 export type ApiCategory = typeof apiCategories[number];

@@ -207,7 +207,7 @@ export function responseFingerprint(_req: Request, res: Response, next: NextFunc
 // ─── Anti-Clone (protect endpoint list from non-browser access) ────────────
 
 export function antiClone(req: Request, res: Response, next: NextFunction): void {
-  if (req.path === "/api/endpoints/list" || req.path === "/api/endpoints") {
+  if (req.path === "/api/endpoints/list") {
     const ua = (req.headers["user-agent"] || "").toLowerCase();
     if (!ua || !ua.includes("mozilla")) {
       res.status(403).json({ success: false, error: "Browser access required" });

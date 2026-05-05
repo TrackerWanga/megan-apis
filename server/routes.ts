@@ -1,3 +1,4 @@
+import { getServerStatus, getAllEndpoints, searchEndpoints, getEndpointsByCategory, getCategories, getMethodStats } from "../lib/downloaders/meta-endpoints";
 import { getZodiacSign, getAllZodiacSigns, getZodiacByElement, getCompatibility, playRPS, guessCountry, checkCountryGuess, getWordScramble, checkScramble, startNumberGame, guessNumber } from "../lib/downloaders/zodiac-games";
 import { scrapeTukoNews, scrapeNationNews } from "../lib/downloaders/kenya-news";
 import { searchAcademicPapers, searchBooks, lookupWord, getBookDetails } from "../lib/downloaders/education-api";
@@ -1583,6 +1584,12 @@ export async function registerRoutes(
   // ─── ADMIN: Provider Management ────────────────────────────────────────────
   app.get("/api/admin/update-ytdlp", async (_req, res) => { try { const { stdout, stderr } = await execAsync("yt-dlp --update-to stable 2>&1", { timeout: 60000 }); reloadCookies(); return res.json({ success: true, creator: creatorTag, message: (stdout + stderr).trim() || "yt-dlp is already up to date" }); } catch (e: any) { return res.status(500).json({ success: false, creator: creatorTag, error: `yt-dlp update failed: ${e.message}` }); } });
   app.get("/api/admin/reload-cookies", (_req, res) => { reloadCookies(); return res.json({ success: true, creator: creatorTag, message: "Cookie cache cleared." }); });
+app.get("/api/status", (req, res) => { return res.json({ success: true, result: getServerStatus() }); });
+app.get("/api/endpoints", (req, res) => { return res.json({ success: true, result: getAllEndpoints() }); });
+app.get("/api/endpoints/search", (req, res) => { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); return res.json({ success: true, result: searchEndpoints(q) }); });
+app.get("/api/endpoints/categories", (req, res) => { return res.json({ success: true, result: getCategories() }); });
+app.get("/api/endpoints/category/:name", (req, res) => { const result = getEndpointsByCategory(req.params.name); if (!result) return res.status(404).json({ error: "Category not found" }); return res.json({ success: true, result }); });
+app.get("/api/endpoints/stats", (req, res) => { return res.json({ success: true, result: getMethodStats() }); });
   app.get("/api/admin/provider-health", (_req, res) => { return res.json({ success: true, creator: creatorTag, providers: ["ytdlp", "fabdl", "cobalt", "piped", "y2mate"], note: "Providers are tried in order. Failed providers are on 5-minute cooldown." }); });
 app.get("/api/zodiac/all", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", signs: getAllZodiacSigns() }); });
 app.get("/api/zodiac/:sign", (req, res) => { const result = getZodiacSign(req.params.sign); if (!result) return res.status(404).json({ error: "Sign not found" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); });
