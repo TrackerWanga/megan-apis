@@ -199,7 +199,7 @@ export function registerAIRoutes(app: Express): void {
       if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
         return res.status(400).json({
           status: false,
-          creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+          creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
           error: `Parameter 'q' is required. Usage: ${ep.path}?q=Your message here`,
         });
       }
@@ -208,13 +208,13 @@ export function registerAIRoutes(app: Express): void {
         const text = await chatEverywhereProxy(prompt.trim(), ep.system);
         return res.json({
           status: true,
-          creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+          creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
           result: text,
         });
       } catch (error: any) {
         return res.status(500).json({
           status: false,
-          creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+          creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
           error: error.message,
         });
       }
@@ -255,7 +255,7 @@ export function registerAIRoutes(app: Express): void {
       const finalUrl = response.url;
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "ChatEverywhere",
         model: "unsplash",
         url: finalUrl,
@@ -281,7 +281,7 @@ export function registerAIRoutes(app: Express): void {
       const result = await chatEverywhereProxy(prompt, "You are a professional translator. Translate accurately and naturally.");
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "ChatEverywhere",
         original: text.trim(),
         translated: result,
@@ -306,7 +306,7 @@ export function registerAIRoutes(app: Express): void {
       );
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "ChatEverywhere",
         summary: result,
       });
@@ -329,7 +329,7 @@ export function registerAIRoutes(app: Express): void {
       );
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "ChatEverywhere",
         code: result,
         language: language || "auto",
@@ -352,7 +352,7 @@ export function registerAIRoutes(app: Express): void {
       );
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "ChatEverywhere",
         tool: "AI Scanner",
         analysis: result,
@@ -375,7 +375,7 @@ export function registerAIRoutes(app: Express): void {
       );
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "ChatEverywhere",
         tool: "AI Humanizer",
         original: text.trim(),
@@ -400,7 +400,7 @@ export function registerAIRoutes(app: Express): void {
       const listData = await listRes.json() as any[];
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "Unsplash + Picsum",
         query: q,
         featured: finalUrl,
@@ -427,7 +427,7 @@ export function registerAIRoutes(app: Express): void {
       const random = images[Math.floor(Math.random() * images.length)];
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "Lorem Picsum",
         image: {
           id: random.id,
@@ -456,7 +456,7 @@ export function registerAIRoutes(app: Express): void {
       const finalUrl = response.url;
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "LoremFlickr",
         query: q,
         image: { url: finalUrl, width, height, tags: q },
@@ -472,7 +472,7 @@ export function registerAIRoutes(app: Express): void {
       const data = await response.json() as any;
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "Dog CEO API",
         image: data.message,
         breed: data.message?.split("/breeds/")?.[1]?.split("/")?.[0] || "unknown",
@@ -488,7 +488,7 @@ export function registerAIRoutes(app: Express): void {
       const data = await response.json() as any;
       return res.json({
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "CATAAS",
         image: `https://cataas.com/cat/${data._id}`,
         id: data._id,

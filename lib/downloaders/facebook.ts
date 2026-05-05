@@ -103,7 +103,7 @@ async function tryFdownloader(url: string): Promise<FacebookResult> {
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       provider: "fdownloader.net",
       title: titleMatch?.[1]?.trim() || "Facebook Video",
       sdUrl: sdUrl || hdUrl,
@@ -148,7 +148,7 @@ async function tryGetmyfb(url: string): Promise<FacebookResult> {
       }
       return {
         success: true,
-        creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
         provider: "getmyfb.com",
         title: "Facebook Video",
         sdUrl: anyLinks[0],
@@ -158,7 +158,7 @@ async function tryGetmyfb(url: string): Promise<FacebookResult> {
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       provider: "getmyfb.com",
       title: "Facebook Video",
       sdUrl: allLinks[0],
@@ -247,7 +247,7 @@ async function trySnapsave(fbUrl: string): Promise<FacebookResult> {
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       provider: "snapsave.app",
       title: "Facebook Video",
       hdUrl: hdLink,

@@ -46,6 +46,7 @@ app.use(globalLimiter);
 app.use(botBlocker);
 app.use(blockDirectSourceAccess);
 app.use(antiClone);
+app.use(responseFingerprint);
 
 app.use(
   express.json({

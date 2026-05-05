@@ -123,7 +123,7 @@ async function searchViaItunes(query: string): Promise<SpotifyTrack[]> {
 
 export async function searchSpotify(query: string): Promise<SpotifySearchResult> {
   if (!query || query.trim().length === 0) {
-    return { success: false, creator: "Megan APIs by Tracker Wanga | Falcon Tech", error: "Search query is required." };
+    return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Search query is required." };
   }
 
   console.log(`[spotify] Searching: ${query}`);
@@ -138,7 +138,7 @@ export async function searchSpotify(query: string): Promise<SpotifySearchResult>
   if (tracks.length === 0) {
     return {
       success: false,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       query,
       error: "No results found. Try a different search term.",
     };
@@ -146,7 +146,7 @@ export async function searchSpotify(query: string): Promise<SpotifySearchResult>
 
   return {
     success: true,
-    creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+    creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
     query,
     tracks,
   };
@@ -157,7 +157,7 @@ export async function downloadSpotify(
   baseUrl: string
 ): Promise<SpotifyDownloadResult> {
   if (!input || input.trim().length === 0) {
-    return { success: false, creator: "Megan APIs by Tracker Wanga | Falcon Tech", error: "Provide a Spotify URL or song name." };
+    return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Provide a Spotify URL or song name." };
   }
 
   input = input.trim();
@@ -186,7 +186,7 @@ export async function downloadSpotify(
     }
 
     if (!song) {
-      return { success: false, creator: "Megan APIs by Tracker Wanga | Falcon Tech", error: `No results found for "${input}".` };
+      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: `No results found for "${input}".` };
     }
 
     let downloadUrl: string | undefined;
@@ -222,7 +222,7 @@ export async function downloadSpotify(
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       title: song.title || "Unknown",
       artist: song.artist || "Unknown",
       album: song.album || undefined,
@@ -241,7 +241,7 @@ export async function downloadSpotify(
         const track = searchResult[0];
         return {
           success: true,
-          creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+          creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
           title: track.title,
           artist: track.artist,
           album: track.album,
@@ -255,7 +255,7 @@ export async function downloadSpotify(
 
     return {
       success: false,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       error: `Could not find track for "${input}". Try a Spotify URL or different search term.`,
     };
   }

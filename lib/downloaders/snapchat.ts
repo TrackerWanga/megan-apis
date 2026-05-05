@@ -144,7 +144,7 @@ export async function downloadSnapchat(url: string): Promise<SnapchatResult> {
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       ...parsed,
     };
   } catch (error: any) {

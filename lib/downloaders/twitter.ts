@@ -1,5 +1,5 @@
 const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
-const CREATOR = "Megan APIs by Tracker Wanga | Falcon Tech";
+const CREATOR = "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech";
 
 interface TwitterMedia {
   type: "video" | "image" | "gif";

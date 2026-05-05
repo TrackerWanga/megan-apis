@@ -108,7 +108,7 @@ export async function downloadTikTok(url: string): Promise<TikTokResult> {
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       title: titleMatch?.[1]?.trim() || "TikTok Video",
       author: authorMatch?.[1] || undefined,
       videoUrl,

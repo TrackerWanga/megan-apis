@@ -527,7 +527,7 @@ export async function generatePhotofunia(
   textInputs: Record<string, string>,
   imageUrl?: string
 ): Promise<PhotoFuniaResult> {
-  const CREATOR = "Megan APIs by Tracker Wanga | Falcon Tech";
+  const CREATOR = "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech";
   const effect = PHOTOFUNIA_EFFECTS.find(e => e.id === effectId || e.slug === effectId);
   if (!effect) {
     return { success: false, creator: CREATOR, error: `Effect "${effectId}" not found. Use /api/photofunia/list to see available effects.` };

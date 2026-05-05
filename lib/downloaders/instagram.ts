@@ -160,7 +160,7 @@ async function tryCobaltInstagram(url: string): Promise<InstagramResult> {
           !dlUrl.includes(".png");
         return {
           success: true,
-          creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+          creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
           provider: "cobalt",
           title: data.filename || "Instagram Media",
           media: [{ type: isVideo ? "video" : "image", url: dlUrl }],
@@ -170,7 +170,7 @@ async function tryCobaltInstagram(url: string): Promise<InstagramResult> {
       if ((data.status === "tunnel" || data.status === "redirect") && data.url) {
         return {
           success: true,
-          creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+          creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
           provider: "cobalt",
           title: data.filename || "Instagram Media",
           media: [{ type: "video", url: data.url }],
@@ -230,7 +230,7 @@ async function tryYtdlpInstagram(url: string): Promise<InstagramResult> {
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       provider: "ytdlp",
       title,
       username,
@@ -352,7 +352,7 @@ async function tryGraphQLApi(shortcode: string): Promise<InstagramResult> {
 
     return {
       success: true,
-      creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
       provider: "graphql",
       title:
         mediaData.edge_media_to_caption?.edges?.[0]?.node?.text?.substring(0, 100) ||
@@ -404,7 +404,7 @@ export async function downloadInstagram(url: string): Promise<InstagramResult> {
 
   return {
     success: false,
-    creator: "Megan APIs by Tracker Wanga | Falcon Tech",
+    creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
     error:
       "Could not download this Instagram post. It may be private, deleted, or temporarily unavailable.",
     details: errors.join(" | "),

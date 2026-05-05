@@ -1,164 +1,156 @@
+import { Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
-import type { Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import { getSettings } from "./admin-settings";
 
-const CREATOR = "Megan APIs by Tracker Wanga | Falcon Tech";
-const isDev = process.env.NODE_ENV !== "production";
+// ─── IP Tracking ───────────────────────────────────────────────────────────
 
-// ─── Per-IP Tracking (for admin visibility) ───────────────────────────────────
+interface IpRecord {
+  ip: string;
+  count: number;
+  endpoints: Record<string, number>;
+  lastSeen: number;
+}
 
-interface IpRecord { hits: number; blocked: boolean; firstSeen: number; lastSeen: number; }
-const IP_TODAY: Record<string, IpRecord> = {};
-const IP_ALLTIME: Record<string, number> = {};
-let ipTrackDay = new Date().toDateString();
+const ipMap = new Map<string, IpRecord>();
 
-function checkIpDayRollover() {
-  const today = new Date().toDateString();
-  if (today !== ipTrackDay) {
-    for (const k in IP_TODAY) delete IP_TODAY[k];
-    ipTrackDay = today;
+export function trackIpRequest(ip: string, endpoint: string): void {
+  const now = Date.now();
+  let record = ipMap.get(ip);
+  if (!record) {
+    record = { ip, count: 0, endpoints: {}, lastSeen: now };
+    ipMap.set(ip, record);
+  }
+  record.count++;
+  record.endpoints[endpoint] = (record.endpoints[endpoint] || 0) + 1;
+  record.lastSeen = now;
+  
+  if (Math.random() < 0.001) {
+    for (const [key, val] of ipMap.entries()) {
+      if (now - val.lastSeen > 3600000) ipMap.delete(key);
+    }
   }
 }
 
-export function trackIpRequest(ip: string) {
-  checkIpDayRollover();
-  if (!IP_TODAY[ip]) IP_TODAY[ip] = { hits: 0, blocked: false, firstSeen: Date.now(), lastSeen: Date.now() };
-  IP_TODAY[ip].hits++;
-  IP_TODAY[ip].lastSeen = Date.now();
-  IP_ALLTIME[ip] = (IP_ALLTIME[ip] || 0) + 1;
-}
-
-export function getTopIpsToday(n = 15) {
-  checkIpDayRollover();
-  return Object.entries(IP_TODAY)
-    .sort((a, b) => b[1].hits - a[1].hits)
-    .slice(0, n)
-    .map(([ip, rec]) => ({ ip, hits: rec.hits, lastSeen: rec.lastSeen }));
+export function getTopIpsToday(): IpRecord[] {
+  return Array.from(ipMap.values())
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 20);
 }
 
 export function getSecurityStats() {
-  checkIpDayRollover();
   return {
-    uniqueIpsToday: Object.keys(IP_TODAY).length,
-    topIpsToday: getTopIpsToday(15),
-    currentDay: new Date().toDateString(),
+    totalIpsTracked: ipMap.size,
+    topIps: getTopIpsToday(),
   };
 }
 
-// ─── Bot / Scanner UA Detection ───────────────────────────────────────────────
+// ─── Rate Limiters ─────────────────────────────────────────────────────────
 
-const BLOCKED_UA_RE = [
-  /scrapy/i,
-  /python-requests\/[01]\./i,       // very old python-requests
-  /sqlmap/i,
-  /nikto/i,
-  /nmap/i,
-  /masscan/i,
-  /zgrab/i,
-  /nuclei/i,
-  /dirbuster/i,
-  /gobuster/i,
-  /ffuf/i,
-  /wfuzz/i,
-  /hydra/i,
-  /burpsuite/i,
-  /acunetix/i,
-  /nessus/i,
-  /openvas/i,
-];
-
-export function botBlocker(req: Request, res: Response, next: NextFunction) {
-  if (!req.path.startsWith("/api/")) return next();
-
-  const ua = req.headers["user-agent"] || "";
-
-  if (ua === "") {
-    return res.status(403).json({ success: false, error: "Access denied.", creator: CREATOR });
-  }
-
-  for (const pattern of BLOCKED_UA_RE) {
-    if (pattern.test(ua)) {
-      return res.status(403).json({ success: false, error: "Access denied.", creator: CREATOR });
-    }
-  }
-
-  next();
-}
-
-// ─── IP Blocklist Middleware ───────────────────────────────────────────────────
-
-export function ipBlocklistGuard(req: Request, res: Response, next: NextFunction) {
-  if (isDev) return next();
-  const ip = (req.ip || req.socket.remoteAddress || "").replace(/^::ffff:/, "");
-  const blocklist: string[] = (getSettings() as any).ipBlocklist || [];
-  if (blocklist.includes(ip)) {
-    return res.status(403).json({ success: false, error: "Access denied.", creator: CREATOR });
-  }
-  next();
-}
-
-// ─── Rate Limiters ────────────────────────────────────────────────────────────
-
-function makeRateLimitHandler(msg: string) {
-  return (_req: Request, res: Response) => {
-    res.status(429).json({ success: false, error: msg, creator: CREATOR });
-  };
-}
-
-// Global: 300 req / 15 min per IP — hard ceiling against floods
 export const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: isDev ? 10000 : 300,
+  max: 300,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: makeRateLimitHandler("Too many requests. Slow down."),
-  skip: (req) => !req.path.startsWith("/api") && !req.path.startsWith("/download"),
+  message: { success: false, error: "Too many requests, please try again later." },
 });
 
-// Login: 5 attempts / 15 min per IP — brute force protection
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: isDev ? 1000 : 5,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: makeRateLimitHandler("Too many login attempts. Try again later."),
+  message: { success: false, error: "Too many login attempts, please try again later." },
 });
 
-// General API: 80 req / min per IP
 export const apiLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: isDev ? 10000 : 80,
+  max: 80,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: makeRateLimitHandler("API rate limit exceeded. Try again in a moment."),
+  message: { success: false, error: "API rate limit exceeded. Slow down!" },
 });
 
-// Heavy endpoints (downloads, video search, etc.): 20 req / min per IP
 export const heavyLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: isDev ? 10000 : 20,
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: makeRateLimitHandler("Download/search rate limit exceeded. Please wait a moment."),
+  message: { success: false, error: "Download rate limit exceeded. Max 20 requests per minute." },
 });
 
-// Admin endpoints: 30 req / 5 min per IP
 export const adminLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  max: isDev ? 10000 : 30,
+  max: 30,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: makeRateLimitHandler("Admin rate limit exceeded."),
+  message: { success: false, error: "Admin rate limit exceeded." },
 });
 
-// ─── Security Headers ─────────────────────────────────────────────────────────
+// ─── Bot / Scanner Blocker ─────────────────────────────────────────────────
 
-export function securityHeaders() {
-  if (isDev) {
-    return (_req: Request, _res: Response, next: NextFunction) => next();
+const SCANNER_PATTERNS = [
+  "sqlmap", "nikto", "nmap", "scrapy", "nuclei", "masscan",
+  "dirbuster", "gobuster", "ffuf", "wfuzz", "hydra",
+  "burpsuite", "acunetix", "nessus", "openvas", "zgrab",
+];
+
+export function botBlocker(req: Request, res: Response, next: NextFunction): void {
+  const ua = (req.headers["user-agent"] || "").toLowerCase();
+  
+  if (SCANNER_PATTERNS.some(pattern => ua.includes(pattern))) {
+    res.status(403).json({ success: false, error: "Forbidden" });
+    return;
   }
+  
+  if (req.path.startsWith("/api") && !ua.trim()) {
+    res.status(403).json({ success: false, error: "Forbidden" });
+    return;
+  }
+  
+  next();
+}
 
+// ─── IP Blocklist Guard ────────────────────────────────────────────────────
+
+export function ipBlocklistGuard(req: Request, res: Response, next: NextFunction): void {
+  const settings = getSettings();
+  const ip = req.ip || req.socket.remoteAddress || "unknown";
+  
+  if (settings.ipBlocklist?.includes(ip)) {
+    res.status(403).json({ success: false, error: "Access denied" });
+    return;
+  }
+  
+  next();
+}
+
+export const blocklist = {
+  add(ip: string): void {
+    const settings = getSettings();
+    if (!settings.ipBlocklist) settings.ipBlocklist = [];
+    if (!settings.ipBlocklist.includes(ip)) {
+      settings.ipBlocklist.push(ip);
+      saveSettings(settings);
+    }
+  },
+  remove(ip: string): void {
+    const settings = getSettings();
+    if (settings.ipBlocklist) {
+      settings.ipBlocklist = settings.ipBlocklist.filter(i => i !== ip);
+      saveSettings(settings);
+    }
+  },
+  list(): string[] {
+    return getSettings().ipBlocklist || [];
+  }
+};
+
+import { saveSettings } from "./admin-settings";
+
+// ─── Security Headers ──────────────────────────────────────────────────────
+
+export function securityHeaders(): ReturnType<typeof helmet> {
   return helmet({
     contentSecurityPolicy: {
       directives: {
@@ -166,86 +158,61 @@ export function securityHeaders() {
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "blob:", "https:"],
-        connectSrc: ["'self'", "ws:", "wss:"],
-        frameAncestors: ["'self'"],
-        frameSrc: ["'none'"],
-        objectSrc: ["'none'"],
-        baseUri: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:", "blob:"],
+        mediaSrc: ["'self'", "blob:", "https:"],
+        connectSrc: ["'self'", "https:", "wss:"],
       },
     },
-    crossOriginEmbedderPolicy: false,
-    crossOriginOpenerPolicy: false,
     crossOriginResourcePolicy: { policy: "cross-origin" },
     referrerPolicy: { policy: "strict-origin-when-cross-origin" },
-    xFrameOptions: false,
+    frameguard: { action: "deny" },
   });
 }
 
-// ─── Anti-clone (protects endpoint list) ─────────────────────────────────────
+// ─── Source File Access Blocker ────────────────────────────────────────────
 
-export function antiClone(req: Request, res: Response, next: NextFunction) {
-  if (!req.path.startsWith("/api/")) return next();
-  const path = req.path;
-
-  if (path === "/api/endpoints/list" || path === "/api/all-endpoints") {
-    const referer = req.headers.referer || req.headers.origin || "";
-    const host = req.headers.host || "";
-    const ua = req.headers["user-agent"] || "";
-
-    const isFromOwnSite = referer.includes(host) || referer === "";
-    const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
-
-    if (!isFromOwnSite || !isBrowser) {
-      return res.status(403).json({
-        success: false,
-        error: "Access denied. This endpoint is for internal use only.",
-        creator: CREATOR,
-      });
-    }
+export function blockDirectSourceAccess(req: Request, res: Response, next: NextFunction): void {
+  const p = req.path.toLowerCase();
+  const blocked = [".ts", ".tsx", ".map", ".env"];
+  const blockedPaths = ["/server/", "/lib/", "/shared/", "/.git/", "/node_modules/"];
+  
+  if (blocked.some(ext => p.endsWith(ext)) || blockedPaths.some(bp => p.includes(bp))) {
+    res.status(404).json({ success: false, error: "Not found" });
+    return;
   }
-
   next();
 }
 
-// ─── Response Fingerprint ─────────────────────────────────────────────────────
+// ─── Response Fingerprinting ───────────────────────────────────────────────
 
-export function responseFingerprint(_req: Request, res: Response, next: NextFunction) {
+export function responseFingerprint(_req: Request, res: Response, next: NextFunction): void {
   const originalJson = res.json.bind(res);
   res.json = function (body: any) {
-    if (body && typeof body === "object" && !Array.isArray(body)) {
-      body._powered = "WolfAPIs";
-      body._ts = Date.now();
+    if (body && typeof body === "object") {
+      // Clean up old creator field if it exists (from legacy route handlers)
+      if (body.creator && body.creator !== "Tracker Wanga") {
+        delete body.creator;
+      }
+      // Add fresh metadata
+      body.api_name = "Megan APIs";
+      body.version = "3.6.4";
+      body.creator = "Tracker Wanga";
+      body.tech = "Falcon Tech";
     }
     return originalJson(body);
   };
   next();
 }
 
-// ─── Block Direct Source Access ───────────────────────────────────────────────
+// ─── Anti-Clone (protect endpoint list from non-browser access) ────────────
 
-export function blockDirectSourceAccess(req: Request, res: Response, next: NextFunction) {
-  if (isDev) return next();
-
-  const path = req.path.toLowerCase();
-  const blockedExtensions = [".ts", ".tsx", ".map", ".env", ".lock", ".toml"];
-  const blockedDirs = ["/server/", "/lib/", "/shared/", "/.local/", "/node_modules/", "/.git/"];
-
-  if (path.startsWith("/api/") || path.startsWith("/download/") || path.startsWith("/assets/")) {
-    return next();
-  }
-
-  for (const dir of blockedDirs) {
-    if (path.startsWith(dir)) {
-      return res.status(404).json({ error: "Not found" });
+export function antiClone(req: Request, res: Response, next: NextFunction): void {
+  if (req.path === "/api/endpoints/list" || req.path === "/api/endpoints") {
+    const ua = (req.headers["user-agent"] || "").toLowerCase();
+    if (!ua || !ua.includes("mozilla")) {
+      res.status(403).json({ success: false, error: "Browser access required" });
+      return;
     }
   }
-
-  for (const ext of blockedExtensions) {
-    if (path.endsWith(ext)) {
-      return res.status(404).json({ error: "Not found" });
-    }
-  }
-
   next();
 }
