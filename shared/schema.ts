@@ -51,7 +51,7 @@ export const apiCategories = [
   { id: "ai-chat", name: "AI Chat", description: "Free AI chat completion APIs — 33 models", icon: "MessageSquare" },
   { id: "ai-tools", name: "AI Tools", description: "AI-powered utilities: translate, summarize, code, scanner, humanizer", icon: "Wand2" },
   { id: "ai-image", name: "AI Image", description: "Free image search and generation APIs", icon: "Image" },
-  { id: "music", name: "Music & Media", description: "YouTube search, MP3, MP4 download, and lyrics endpoints", icon: "Music" },
+  { id: "music", name: "Music & Media", description: "YouTube search, MP3, MP4 download, lyrics, SoundCloud, Bible AI", icon: "Music" },
   { id: "social-media", name: "Social Media", description: "Download from YouTube, TikTok, Instagram, Facebook, Twitter/X, Snapchat", icon: "Share2" },
   { id: "spotify", name: "Spotify", description: "Search and download Spotify tracks, albums, artists, playlists", icon: "Music2" },
   { id: "shazam", name: "Shazam", description: "Search songs and recognize music from audio", icon: "AudioLines" },
@@ -64,10 +64,23 @@ export const apiCategories = [
   { id: "tools", name: "Tools", description: "QR codes, dictionary, weather, passwords, and more utilities", icon: "Wrench" },
   { id: "security", name: "Security", description: "Ethical hacking, OSINT, vulnerability scanning tools", icon: "ShieldCheck" },
   { id: "sports", name: "Sports", description: "Live scores, fixtures, standings, team & player data", icon: "Trophy" },
-  { id: "search", name: "Search", description: "Wikipedia, news, GitHub, NPM, Reddit, and web search APIs", icon: "Search" },
+  { id: "search", name: "Search", description: "Wikipedia, news, GitHub, NPM, Reddit, YouTube, images, videos", icon: "Search" },
   { id: "textpro", name: "Text Effects", description: "109 text effect generators: neon, 3D, chrome, fire, glitter and more", icon: "Type" },
   { id: "converter", name: "Converter", description: "Media conversion tools for WhatsApp bots", icon: "RefreshCw" },
   { id: "audio-fx", name: "Audio Effects", description: "25 audio effects: bass boost, robot, echo, nightcore, 8D and more", icon: "Headphones" },
+  { id: "zodiac", name: "Zodiac", description: "Zodiac signs, horoscopes, compatibility, and elements", icon: "Star" },
+  { id: "games", name: "Games", description: "Rock Paper Scissors, Flag Guess, Word Scramble, Number Guess", icon: "Gamepad2" },
+  { id: "education", name: "Education", description: "Academic papers, books, dictionary, and reference APIs", icon: "BookOpen" },
+  { id: "news", name: "News", description: "Kenyan and global news scraping APIs", icon: "Newspaper" },
+  { id: "classifieds", name: "Classifieds", description: "Jiji and Pigiame classifieds scraping", icon: "Tag" },
+  { id: "jobs", name: "Jobs", description: "Kenyan job listings from BrighterMonday", icon: "Briefcase" },
+  { id: "crypto", name: "Crypto", description: "Live cryptocurrency prices and top 10 coins", icon: "Bitcoin" },
+  { id: "forex", name: "Forex", description: "Live exchange rates and currency conversion", icon: "DollarSign" },
+  { id: "dev-tools", name: "Dev Tools", description: "Deobfuscate, deminify, sandbox JS, headless browser, auto-decode", icon: "Code2" },
+  { id: "scraping", name: "Scraping", description: "Website scraping: links, inspect, scripts, cookies, full page", icon: "Globe" },
+  { id: "fun-data", name: "Fun Data", description: "Kenyan proverbs, Swahili phrases, dad jokes, affirmations", icon: "Smile" },
+  { id: "admin", name: "Admin & Keys", description: "API key management, admin settings, security, provider health", icon: "Settings" },
+  { id: "meta", name: "Meta", description: "Server status, endpoint catalog, media status, proxy/stream", icon: "Info" },
 ];
 
 const Q_PARAM = [{ name: "q", type: "string", required: true, description: "Your message or question", default: "Hello! How are you?" }];
@@ -141,6 +154,14 @@ const musicEndpoints: ApiEndpoint[] = [
   { path: "/download/video", method: "GET", description: "Extract video from YouTube", params: [{ name: "url", type: "string", required: false, description: "YouTube video URL", default: "https://www.youtube.com/watch?v=e-ORhEE9VVg" }, { name: "q", type: "string", required: false, description: "Song name to search", default: "Home NF" }], format: "mp4", category: "music" },
   { path: "/download/hd", method: "GET", description: "Download YouTube video in HD quality", params: [{ name: "url", type: "string", required: false, description: "YouTube video URL", default: "https://www.youtube.com/watch?v=e-ORhEE9VVg" }, { name: "q", type: "string", required: false, description: "Song name to search", default: "Home NF" }], format: "mp4", category: "music" },
   { path: "/download/lyrics", method: "GET", description: "Get song lyrics by name", params: [{ name: "q", type: "string", required: true, description: "Song name and artist", default: "Home NF" }], format: "json", category: "music" },
+  { path: "/stream", method: "GET", description: "Stream audio/video with direct playback", params: [{ name: "q", type: "string", required: true, description: "YouTube URL or search query", default: "" }, { name: "type", type: "string", required: false, description: "mp3 or mp4", default: "mp3" }], format: "stream", category: "music" },
+  { path: "/proxy", method: "GET", description: "Proxy media content with proper headers", params: [{ name: "url", type: "string", required: true, description: "Media URL to proxy", default: "" }], format: "stream", category: "music" },
+  { path: "/api/music/search", method: "GET", description: "Search music across platforms", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "Home NF" }], format: "json", category: "music", provider: "Multi" },
+  { path: "/api/music/trending", method: "GET", description: "Get trending music", params: [], format: "json", category: "music", provider: "Multi" },
+  { path: "/api/music/artist", method: "GET", description: "Search artist info", params: [{ name: "q", type: "string", required: true, description: "Artist name", default: "NF" }], format: "json", category: "music", provider: "Multi" },
+  { path: "/api/soundcloud/download", method: "GET", description: "Download SoundCloud track", params: [{ name: "url", type: "string", required: true, description: "SoundCloud URL", default: "" }], format: "json", category: "music", provider: "SoundCloud" },
+  { path: "/api/soundcloud/search", method: "GET", description: "Search SoundCloud tracks", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "lofi" }], format: "json", category: "music", provider: "SoundCloud" },
+  { path: "/api/bible/ai", method: "GET", description: "AI-powered Bible Q&A", params: [{ name: "q", type: "string", required: true, description: "Bible question", default: "What is love?" }], format: "json", category: "music", provider: "Bible AI" },
 ];
 
 const socialMediaEndpoints: ApiEndpoint[] = [
@@ -371,32 +392,40 @@ export const photofuniaEffectsList: EffectEntry[] = [
   { id: "captivity", name: "Captivity", category: "halloween", inputType: "img", required: "imageUrl" },
 ];
 
-const ephotoEndpoints: ApiEndpoint[] = ephotoEffectsList.map(e => ({
-  path: `/api/ephoto/${e.id}`,
-  method: "GET" as const,
-  description: `Generate ${e.name} via Ephoto360.com`,
-  params: [{ name: "text", type: "string", required: true, description: "Text to render" }],
-  format: "json",
-  category: "ephoto",
-  provider: "Ephoto360",
-  subcategory: e.category,
-}));
-
-const photofuniaEndpoints: ApiEndpoint[] = photofuniaEffectsList.map(e => {
-  const params: ApiParam[] = [];
-  if (e.required.includes("imageUrl")) params.push({ name: "imageUrl", type: "string", required: true, description: "Image URL" });
-  if (e.required.includes("text")) params.push({ name: "text", type: "string", required: true, description: "Text input" });
-  return {
-    path: `/api/photofunia/${e.id}`,
+const ephotoEndpoints: ApiEndpoint[] = [
+  { path: "/api/ephoto/list", method: "GET", description: "List all available Ephoto360 text effects", params: [], format: "json", category: "ephoto", provider: "Ephoto360" },
+  { path: "/api/ephoto/generate", method: "POST", description: "Generate an Ephoto360 text effect", params: [{ name: "effect", type: "string", required: true, description: "Effect ID" }, { name: "text", type: "string", required: true, description: "Text to render" }], format: "json", category: "ephoto", provider: "Ephoto360" },
+  ...ephotoEffectsList.map(e => ({
+    path: `/api/ephoto/${e.id}`,
     method: "GET" as const,
-    description: `Generate ${e.name} via PhotoFunia.com`,
-    params,
+    description: `Generate ${e.name} via Ephoto360.com`,
+    params: [{ name: "text", type: "string", required: true, description: "Text to render" }],
     format: "json",
-    category: "photofunia",
-    provider: "PhotoFunia",
+    category: "ephoto",
+    provider: "Ephoto360",
     subcategory: e.category,
-  };
-});
+  })),
+];
+
+const photofuniaEndpoints: ApiEndpoint[] = [
+  { path: "/api/photofunia/list", method: "GET", description: "List all available PhotoFunia effects", params: [], format: "json", category: "photofunia", provider: "PhotoFunia" },
+  { path: "/api/photofunia/generate", method: "POST", description: "Generate a PhotoFunia effect", params: [{ name: "effect", type: "string", required: true, description: "Effect ID" }, { name: "text", type: "string", required: false, description: "Text input" }, { name: "imageUrl", type: "string", required: false, description: "Image URL" }], format: "json", category: "photofunia", provider: "PhotoFunia" },
+  ...photofuniaEffectsList.map(e => {
+    const params: ApiParam[] = [];
+    if (e.required.includes("imageUrl")) params.push({ name: "imageUrl", type: "string", required: true, description: "Image URL" });
+    if (e.required.includes("text")) params.push({ name: "text", type: "string", required: true, description: "Text input" });
+    return {
+      path: `/api/photofunia/${e.id}`,
+      method: "GET" as const,
+      description: `Generate ${e.name} via PhotoFunia.com`,
+      params,
+      format: "json",
+      category: "photofunia",
+      provider: "PhotoFunia",
+      subcategory: e.category,
+    };
+  }),
+];
 
 const stalkerEndpoints: ApiEndpoint[] = [
   { path: "/api/stalk/github", method: "GET", description: "Lookup GitHub user profile, repos, followers and stats", params: [{ name: "username", type: "string", required: true, description: "GitHub username", default: "TrackerWanga" }], format: "json", category: "stalker", provider: "GitHub" },
@@ -479,6 +508,9 @@ const funEndpoints: ApiEndpoint[] = [
   { path: "/api/fun/mothersday", method: "GET", description: "Get a Mother's Day message", params: [], format: "json", category: "fun" },
   { path: "/api/fun/girlfriendsday", method: "GET", description: "Get a Girlfriend's Day message", params: [], format: "json", category: "fun" },
   { path: "/api/fun/boyfriendsday", method: "GET", description: "Get a Boyfriend's Day message", params: [], format: "json", category: "fun" },
+  { path: "/api/fun/tech-joke", method: "GET", description: "Get a random tech/programming joke", params: [], format: "json", category: "fun" },
+  { path: "/api/fun/never-have-i-ever", method: "GET", description: "Get a Never Have I Ever question", params: [], format: "json", category: "fun" },
+  { path: "/api/fun/fortune-cookie", method: "GET", description: "Get a fortune cookie message", params: [], format: "json", category: "fun" },
 ];
 
 const urlShortenerEndpoints: ApiEndpoint[] = [
@@ -515,6 +547,10 @@ const toolsEndpoints: ApiEndpoint[] = [
   { path: "/api/tools/uuid", method: "GET", description: "Generate UUID v4", params: [], format: "json", category: "tools" },
   { path: "/api/tools/password-strength", method: "GET", description: "Check password strength", params: [{ name: "password", type: "string", required: true, description: "Password to check", default: "MyP@ssw0rd123!" }], format: "json", category: "tools" },
   { path: "/api/tools/screenshot", method: "GET", description: "Take website screenshot", params: [{ name: "url", type: "string", required: true, description: "URL to screenshot", default: "https://meganapis.space" }], format: "json", category: "tools", provider: "thum.io" },
+  { path: "/api/tools/phone-lookup", method: "GET", description: "Lookup phone number info", params: [{ name: "phone", type: "string", required: true, description: "Phone number", default: "+254..." }], format: "json", category: "tools" },
+  { path: "/api/tools/password-audit", method: "GET", description: "Audit password strength in detail", params: [{ name: "password", type: "string", required: true, description: "Password", default: "Test123!" }], format: "json", category: "tools" },
+  { path: "/api/tools/dns-inspector", method: "GET", description: "Inspect DNS records in detail", params: [{ name: "domain", type: "string", required: true, description: "Domain", default: "example.com" }], format: "json", category: "tools" },
+  { path: "/api/tools/wifi-scan", method: "GET", description: "Scan WiFi networks", params: [], format: "json", category: "tools" },
 ];
 
 const securityEndpoints: ApiEndpoint[] = [
@@ -598,6 +634,9 @@ const searchEndpoints: ApiEndpoint[] = [
   { path: "/api/search/country", method: "GET", description: "Search country information", params: [{ name: "q", type: "string", required: true, description: "Country name", default: "Kenya" }], format: "json", category: "search", provider: "REST Countries" },
   { path: "/api/search/images", method: "GET", description: "Search and return images for any keyword", params: [{ name: "q", type: "string", required: true, description: "Image search query", default: "superman" }, { name: "page", type: "string", required: false, description: "Page number (0-based, default: 0)", default: "0" }], format: "json", category: "search", provider: "Yandex Images" },
   { path: "/api/search/videos", method: "GET", description: "Search and return videos for any keyword", params: [{ name: "q", type: "string", required: true, description: "Video search query", default: "superman trailer" }, { name: "page", type: "string", required: false, description: "Page number (0-based, default: 0)", default: "0" }], format: "json", category: "search", provider: "Yandex Videos" },
+  { path: "/api/search/youtube", method: "GET", description: "Search YouTube videos", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "music" }], format: "json", category: "search", provider: "YouTube" },
+  { path: "/api/youtube/trending", method: "GET", description: "Get trending YouTube videos", params: [], format: "json", category: "search", provider: "YouTube" },
+  { path: "/api/youtube/recommend", method: "GET", description: "Get YouTube video recommendations", params: [{ name: "id", type: "string", required: true, description: "Video ID", default: "dQw4w9WgXcQ" }], format: "json", category: "search", provider: "YouTube" },
 ];
 
 export const TEXTPRO_EFFECTS: { id: string; name: string; logoId: number; params: Record<string, string> }[] = [
@@ -713,7 +752,6 @@ const audioFxEndpoints: ApiEndpoint[] = [
   })),
 ];
 
-
 const zodiacEndpoints: ApiEndpoint[] = [
   { path: "/api/zodiac/all", method: "GET", description: "Get all 12 zodiac signs with full metadata and daily horoscopes", params: [], format: "json", category: "zodiac" },
   { path: "/api/zodiac/:sign", method: "GET", description: "Get a specific zodiac sign with traits, compatibility, lucky numbers, career, and daily horoscope", params: [{ name: "sign", type: "string", required: true, description: "Zodiac sign", default: "aries" }], format: "json", category: "zodiac" },
@@ -724,6 +762,7 @@ const zodiacEndpoints: ApiEndpoint[] = [
 const gamesEndpoints: ApiEndpoint[] = [
   { path: "/api/game/rps", method: "GET", description: "Play Rock Paper Scissors against the computer", params: [{ name: "move", type: "string", required: true, description: "Your move", default: "rock" }], format: "json", category: "games" },
   { path: "/api/game/flag-guess", method: "GET", description: "Guess the country from its flag and hint", params: [], format: "json", category: "games" },
+  { path: "/api/game/flag-guess/:id/check", method: "GET", description: "Check your flag guess answer", params: [{ name: "answer", type: "string", required: true, description: "Your country guess" }], format: "json", category: "games" },
   { path: "/api/game/word-scramble", method: "GET", description: "Unscramble a word with hint", params: [], format: "json", category: "games" },
   { path: "/api/game/number-guess", method: "GET", description: "Start a number guessing game (1-100, 7 attempts)", params: [], format: "json", category: "games" },
   { path: "/api/game/number-guess/:id", method: "POST", description: "Submit a guess for number guessing game", params: [{ name: "guess", type: "number", required: true, description: "Your guess", default: "50" }], format: "json", category: "games" },
@@ -734,6 +773,20 @@ const educationEndpoints: ApiEndpoint[] = [
   { path: "/api/education/books", method: "GET", description: "Search 20M+ books via Open Library", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "mathematics" }], format: "json", category: "education", provider: "Open Library" },
   { path: "/api/education/dictionary", method: "GET", description: "Look up word with IPA, audio, definitions, synonyms", params: [{ name: "word", type: "string", required: true, description: "Word", default: "serendipity" }], format: "json", category: "education", provider: "Free Dictionary API" },
   { path: "/api/education/book-details", method: "GET", description: "Get detailed book info by Open Library key", params: [{ name: "key", type: "string", required: true, description: "Book key", default: "OL8112804W" }], format: "json", category: "education", provider: "Open Library" },
+];
+
+const newsEndpoints: ApiEndpoint[] = [
+  { path: "/api/news/tuko", method: "GET", description: "Scrape latest news from Tuko.co.ke", params: [], format: "json", category: "news", provider: "Tuko" },
+  { path: "/api/news/nation", method: "GET", description: "Scrape latest news from Nation Africa", params: [], format: "json", category: "news", provider: "Nation" },
+  { path: "/api/news/standard", method: "GET", description: "Scrape latest news from Standard Media", params: [], format: "json", category: "news", provider: "Standard" },
+  { path: "/api/news/kenyans", method: "GET", description: "Scrape latest news from Kenyans.co.ke", params: [], format: "json", category: "news", provider: "Kenyans" },
+  { path: "/api/news/global", method: "GET", description: "Get global news headlines", params: [], format: "json", category: "news", provider: "NewsAPI" },
+  { path: "/api/news/kenya", method: "GET", description: "Get Kenya-specific news", params: [], format: "json", category: "news", provider: "GNews" },
+];
+
+const classifiedsEndpoints: ApiEndpoint[] = [
+  { path: "/api/classifieds/jiji", method: "GET", description: "Scrape classifieds from Jiji Kenya", params: [], format: "json", category: "classifieds", provider: "Jiji" },
+  { path: "/api/classifieds/pigiame", method: "GET", description: "Scrape classifieds from Pigiame", params: [], format: "json", category: "classifieds", provider: "Pigiame" },
 ];
 
 const jobsEndpoints: ApiEndpoint[] = [
@@ -775,13 +828,40 @@ const funDataEndpoints: ApiEndpoint[] = [
   { path: "/api/fun-data/swahili-phrases", method: "GET", description: "All Swahili phrases", params: [], format: "json", category: "fun-data" },
 ];
 
+const adminEndpoints: ApiEndpoint[] = [
+  { path: "/api/admin/login", method: "POST", description: "Admin login with password", params: [{ name: "password", type: "string", required: true, description: "Admin password" }], format: "json", category: "admin" },
+  { path: "/api/admin/stats", method: "GET", description: "Get server request statistics", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/logs", method: "GET", description: "Get recent request logs", params: [{ name: "limit", type: "number", required: false, description: "Number of logs (max 300)", default: "100" }], format: "json", category: "admin" },
+  { path: "/api/admin/settings", method: "GET", description: "Get admin settings", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/settings", method: "POST", description: "Update admin settings", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/change-password", method: "POST", description: "Change admin password", params: [{ name: "newPassword", type: "string", required: true, description: "New password (min 6 chars)" }], format: "json", category: "admin" },
+  { path: "/api/admin/security", method: "GET", description: "Get security stats and IP blocklist", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/block-ip", method: "POST", description: "Block an IP address", params: [{ name: "ip", type: "string", required: true, description: "IP to block" }], format: "json", category: "admin" },
+  { path: "/api/admin/unblock-ip", method: "POST", description: "Unblock an IP address", params: [{ name: "ip", type: "string", required: true, description: "IP to unblock" }], format: "json", category: "admin" },
+  { path: "/api/admin/update-ytdlp", method: "GET", description: "Update yt-dlp to latest stable version", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/reload-cookies", method: "GET", description: "Clear and reload YouTube cookies", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/provider-health", method: "GET", description: "Check health of all download providers", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/keys/generate", method: "POST", description: "Generate a new API key", params: [{ name: "name", type: "string", required: false, description: "Key name" }, { name: "rate_limit", type: "number", required: false, description: "Rate limit", default: "50" }], format: "json", category: "admin" },
+  { path: "/api/admin/keys", method: "GET", description: "List all API keys", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/keys/:key/update", method: "POST", description: "Update an API key", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/keys/:key", method: "DELETE", description: "Revoke an API key", params: [], format: "json", category: "admin" },
+  { path: "/api/admin/keys/:key/usage", method: "GET", description: "Get API key usage stats", params: [], format: "json", category: "admin" },
+];
+
 const metaEndpoints: ApiEndpoint[] = [
   { path: "/api/status", method: "GET", description: "Server status — uptime, memory, CPU", params: [], format: "json", category: "meta" },
   { path: "/api/endpoints/search", method: "GET", description: "Search all API endpoints by keyword", params: [{ name: "q", type: "string", required: true, description: "Search query", default: "zodiac" }], format: "json", category: "meta" },
   { path: "/api/endpoints/categories", method: "GET", description: "List all API categories with counts", params: [], format: "json", category: "meta" },
   { path: "/api/endpoints/stats", method: "GET", description: "Endpoint statistics by method and category", params: [], format: "json", category: "meta" },
+  { path: "/api/endpoints", method: "GET", description: "List all available API endpoints", params: [], format: "json", category: "meta" },
+  { path: "/api/endpoints/category/:name", method: "GET", description: "Get endpoints by category name", params: [{ name: "name", type: "string", required: true, description: "Category name or ID" }], format: "json", category: "meta" },
+  { path: "/api/media/status", method: "GET", description: "Check status of all media download providers", params: [], format: "json", category: "meta" },
+  { path: "/api/config/cards", method: "GET", description: "Get public repo cards config", params: [], format: "json", category: "meta" },
+  { path: "/api/keys/generate", method: "POST", description: "Generate a free API key", params: [{ name: "name", type: "string", required: false, description: "Key name", default: "Free User" }], format: "json", category: "meta" },
+  { path: "/api/keys/:key/info", method: "GET", description: "Check API key info and usage", params: [], format: "json", category: "meta" },
+  { path: "/api/keys/login", method: "POST", description: "Login with email and password", params: [{ name: "email", type: "string", required: true, description: "Email" }, { name: "password", type: "string", required: true, description: "Password" }], format: "json", category: "meta" },
+  { path: "/files/:filename", method: "GET", description: "Download a generated media file by filename", params: [{ name: "filename", type: "string", required: true, description: "File UUID with extension" }], format: "stream", category: "meta" },
 ];
-
 
 export const allEndpoints: ApiEndpoint[] = [
   ...aiChatEndpoints,
@@ -807,12 +887,15 @@ export const allEndpoints: ApiEndpoint[] = [
   ...zodiacEndpoints,
   ...gamesEndpoints,
   ...educationEndpoints,
+  ...newsEndpoints,
+  ...classifiedsEndpoints,
   ...jobsEndpoints,
   ...cryptoEndpoints,
   ...forexEndpoints,
   ...devToolsEndpoints,
   ...scrapingEndpoints,
   ...funDataEndpoints,
+  ...adminEndpoints,
   ...metaEndpoints,
 ];
 
