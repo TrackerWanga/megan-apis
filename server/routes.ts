@@ -1,4 +1,5 @@
 import { getServerStatus, getAllEndpoints, searchEndpoints, getEndpointsByCategory, getCategories, getMethodStats } from "../lib/downloaders/meta-endpoints";
+import { registerSocialRoutes } from "./social-routes";
 import { registerMediaRoutes } from "./media-routes";
 import { getZodiacSign, getAllZodiacSigns, getZodiacByElement, getCompatibility, playRPS, guessCountry, checkCountryGuess, getWordScramble, checkScramble, startNumberGame, guessNumber } from "../lib/downloaders/zodiac-games";
 import { scrapeTukoNews, scrapeNationNews } from "../lib/downloaders/kenya-news";
@@ -1670,6 +1671,7 @@ app.get("/api/scrape/links", async (req, res) => { try { const url = req.query.u
 app.get("/api/scrape/inspect", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await inspectSite(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
 app.get("/api/scrape/scripts", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await extractScripts(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
 app.get("/api/scrape/cookies", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await getCookies(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+  registerSocialRoutes(app);
   registerMediaRoutes(app);
   return httpServer;
 }
