@@ -193,3 +193,29 @@ const PROGRAMMING_JOKES = [
 export function programmingJoke() {
   return { success: true, ...PROGRAMMING_JOKES[Math.floor(Math.random() * PROGRAMMING_JOKES.length)] };
 }
+
+// ─── OTP ────────────────────────────────────────────
+const otps = new Map<string, { code: string; expires: number }>();
+
+export function generateOTP(phone: string) {
+  const clean = phone.replace(/[^0-9]/g, "");
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  otps.set(clean, { code, expires: Date.now() + 300000 });
+  return {
+    success: true,
+    phone: clean,
+    code,
+    whatsappLink: `https://wa.me/${clean}?text=${encodeURIComponent(`Your verification code is: ${code}`)}`,
+    expiresIn: "5 minutes",
+  };
+}
+
+export function verifyOTP(phone: string, code: string) {
+  const clean = phone.replace(/[^0-9]/g, "");
+  const stored = otps.get(clean);
+  if (!stored) return { success: false, error: "No OTP found for this number" };
+  if (Date.now() > stored.expires) { otps.delete(clean); return { success: false, error: "OTP expired" }; }
+  if (stored.code !== code) return { success: false, error: "Invalid code" };
+  otps.delete(clean);
+  return { success: true, message: "Verified successfully!" };
+}
