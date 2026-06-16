@@ -1,5 +1,5 @@
 import os from "os";
-import { allEndpoints, apiCategories } from "../../shared/schema";
+import { allEndpointsComplete as allEndpoints, apiCategories } from "../../shared/schema";
 
 // ─── Server Status ────────────────────────────────────────────────────────
 

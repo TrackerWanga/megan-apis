@@ -900,3 +900,135 @@ export const allEndpoints: ApiEndpoint[] = [
 ];
 
 export type ApiCategory = typeof apiCategories[number];
+
+// ─── NEW ENDPOINTS (v3.6.4+) ─────────────────────────────────────────────────
+
+export const newTmdbEndpoints: ApiEndpoint[] = [
+  { path: "/api/tmdb/search/movies", method: "GET", description: "Search TMDB movies by title", params: [{ name: "q", type: "string", required: true, description: "Movie title to search", default: "Inception" }, { name: "page", type: "number", required: false, description: "Page number", default: "1" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/search/tv", method: "GET", description: "Search TMDB TV shows by title", params: [{ name: "q", type: "string", required: true, description: "TV show title", default: "Breaking Bad" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/search/people", method: "GET", description: "Search TMDB people by name", params: [{ name: "q", type: "string", required: true, description: "Person name", default: "Brad Pitt" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/trending/:type/:time", method: "GET", description: "Get trending movies or TV shows", params: [{ name: "type", type: "string", required: true, description: "movie, tv, or person" }, { name: "time", type: "string", required: true, description: "day or week" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/popular/movies", method: "GET", description: "Get popular movies", params: [{ name: "page", type: "number", required: false, description: "Page number", default: "1" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/popular/tv", method: "GET", description: "Get popular TV shows", params: [{ name: "page", type: "number", required: false, description: "Page number", default: "1" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/now-playing", method: "GET", description: "Get movies now playing in theaters", params: [], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/on-air", method: "GET", description: "Get TV shows currently on air", params: [], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id", method: "GET", description: "Get detailed movie information", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID", default: "550" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/tv/:id", method: "GET", description: "Get detailed TV show information", params: [{ name: "id", type: "number", required: true, description: "TMDB TV ID", default: "1396" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id/credits", method: "GET", description: "Get movie cast and crew", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id/videos", method: "GET", description: "Get movie trailers and videos", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id/providers", method: "GET", description: "Get streaming providers for a movie", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id/similar", method: "GET", description: "Get similar movies", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id/recommendations", method: "GET", description: "Get movie recommendations", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id/images", method: "GET", description: "Get movie posters and backdrops", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/movie/:id/reviews", method: "GET", description: "Get movie reviews", params: [{ name: "id", type: "number", required: true, description: "TMDB movie ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/person/:id", method: "GET", description: "Get person/actor details", params: [{ name: "id", type: "number", required: true, description: "TMDB person ID", default: "287" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/person/:id/movies", method: "GET", description: "Get person's movie credits", params: [{ name: "id", type: "number", required: true, description: "TMDB person ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/upcoming", method: "GET", description: "Get upcoming movies", params: [{ name: "page", type: "number", required: false, description: "Page number", default: "1" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/top-rated", method: "GET", description: "Get top rated movies", params: [{ name: "page", type: "number", required: false, description: "Page number", default: "1" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/genres/movies", method: "GET", description: "Get all movie genres", params: [], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/genres/tv", method: "GET", description: "Get all TV genres", params: [], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/genre/:id/movies", method: "GET", description: "Get movies by genre", params: [{ name: "id", type: "number", required: true, description: "Genre ID" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/discover/movie", method: "GET", description: "Discover movies with filters", params: [{ name: "with_genres", type: "string", required: false, description: "Comma-separated genre IDs" }, { name: "year", type: "string", required: false, description: "Release year" }, { name: "sort_by", type: "string", required: false, description: "Sort order" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/discover/tv", method: "GET", description: "Discover TV shows with filters", params: [{ name: "with_genres", type: "string", required: false, description: "Comma-separated genre IDs" }, { name: "sort_by", type: "string", required: false, description: "Sort order" }], format: "json", category: "media", provider: "TMDB" },
+  { path: "/api/tmdb/tv/:id/season/:num", method: "GET", description: "Get TV season episodes", params: [{ name: "id", type: "number", required: true, description: "TMDB TV ID" }, { name: "num", type: "number", required: true, description: "Season number", default: "1" }], format: "json", category: "media", provider: "TMDB" },
+];
+
+export const newContentEndpoints: ApiEndpoint[] = [
+  { path: "/api/content/meme", method: "GET", description: "Get a random meme from Reddit", params: [], format: "json", category: "fun", provider: "Meme API" },
+  { path: "/api/content/memes/:count", method: "GET", description: "Get multiple random memes", params: [{ name: "count", type: "number", required: false, description: "Number of memes", default: "5" }], format: "json", category: "fun", provider: "Meme API" },
+  { path: "/api/content/quote", method: "GET", description: "Get a random inspirational quote", params: [], format: "json", category: "fun", provider: "Quotable" },
+  { path: "/api/content/fact", method: "GET", description: "Get a random useless fact", params: [], format: "json", category: "fun", provider: "UselessFacts" },
+  { path: "/api/content/cat-fact", method: "GET", description: "Get a random cat fact", params: [], format: "json", category: "fun", provider: "CatFact" },
+  { path: "/api/content/riddle", method: "GET", description: "Get a random riddle with answer", params: [], format: "json", category: "fun" },
+  { path: "/api/content/trivia", method: "GET", description: "Get a random trivia question", params: [], format: "json", category: "fun", provider: "OpenTDB" },
+];
+
+export const newLocalToolEndpoints: ApiEndpoint[] = [
+  { path: "/api/tools/age", method: "GET", description: "Calculate age from birth date", params: [{ name: "date", type: "string", required: true, description: "Birth date (YYYY-MM-DD)", default: "2000-01-01" }], format: "json", category: "tools" },
+  { path: "/api/tools/word-count", method: "POST", description: "Count words, characters, sentences, paragraphs, and reading time", params: [{ name: "text", type: "string", required: true, description: "Text to analyze", default: "Hello world. This is a test." }], format: "json", category: "tools" },
+  { path: "/api/tools/random-number", method: "GET", description: "Generate a random number", params: [{ name: "min", type: "number", required: false, description: "Minimum value", default: "1" }, { name: "max", type: "number", required: false, description: "Maximum value", default: "100" }], format: "json", category: "tools" },
+  { path: "/api/tools/coin-flip", method: "GET", description: "Flip a coin (heads or tails)", params: [], format: "json", category: "tools" },
+  { path: "/api/tools/dice", method: "GET", description: "Roll a dice", params: [{ name: "sides", type: "number", required: false, description: "Number of sides", default: "6" }], format: "json", category: "tools" },
+  { path: "/api/tools/slug", method: "GET", description: "Generate a URL slug from text", params: [{ name: "text", type: "string", required: true, description: "Text to slugify", default: "Hello World!" }], format: "json", category: "tools" },
+  { path: "/api/tools/lorem", method: "GET", description: "Generate Lorem Ipsum placeholder text", params: [{ name: "paragraphs", type: "number", required: false, description: "Number of paragraphs", default: "3" }], format: "json", category: "tools" },
+];
+
+export const newSocialEndpoints: ApiEndpoint[] = [
+  { path: "/api/social/youtube-thumbnails", method: "GET", description: "Get all YouTube thumbnail sizes for a video", params: [{ name: "url", type: "string", required: true, description: "YouTube video URL or ID", default: "https://youtu.be/dQw4w9WgXcQ" }], format: "json", category: "social-media", provider: "YouTube" },
+  { path: "/api/social/link-preview", method: "GET", description: "Get Open Graph link preview metadata", params: [{ name: "url", type: "string", required: true, description: "URL to preview", default: "https://github.com" }], format: "json", category: "social-media" },
+];
+
+export const newWhatsAppEndpoints: ApiEndpoint[] = [
+  { path: "/api/whatsapp/link", method: "GET", description: "Generate a WhatsApp click-to-chat link", params: [{ name: "phone", type: "string", required: true, description: "Phone number with country code", default: "254758476795" }, { name: "message", type: "string", required: false, description: "Pre-filled message", default: "Hi" }], format: "json", category: "tools", provider: "WhatsApp" },
+  { path: "/api/whatsapp/check", method: "GET", description: "Validate and format a WhatsApp phone number", params: [{ name: "phone", type: "string", required: true, description: "Phone number", default: "254758476795" }], format: "json", category: "tools" },
+  { path: "/api/whatsapp/carrier", method: "GET", description: "Detect Kenyan mobile carrier from phone number", params: [{ name: "phone", type: "string", required: true, description: "Phone number", default: "254712345678" }], format: "json", category: "tools" },
+];
+
+export const newEmailEndpoints: ApiEndpoint[] = [
+  { path: "/api/email/gravatar", method: "GET", description: "Get Gravatar URL and profile for an email", params: [{ name: "email", type: "string", required: true, description: "Email address", default: "trackerwanga@gmail.com" }], format: "json", category: "tools", provider: "Gravatar" },
+  { path: "/api/email/disposable", method: "GET", description: "Check if an email is from a disposable provider", params: [{ name: "email", type: "string", required: true, description: "Email address", default: "test@mailinator.com" }], format: "json", category: "tools" },
+];
+
+export const newTimeEndpoints: ApiEndpoint[] = [
+  { path: "/api/time/day-of-year", method: "GET", description: "Get current day number of the year", params: [], format: "json", category: "tools" },
+  { path: "/api/time/countdown", method: "GET", description: "Get countdown to a specific date", params: [{ name: "date", type: "string", required: true, description: "Target date (YYYY-MM-DD)", default: "2027-01-01" }], format: "json", category: "tools" },
+];
+
+export const newMathEndpoints: ApiEndpoint[] = [
+  { path: "/api/math/prime", method: "GET", description: "Check if a number is prime", params: [{ name: "number", type: "number", required: true, description: "Number to check", default: "17" }], format: "json", category: "tools" },
+  { path: "/api/math/factorial", method: "GET", description: "Calculate factorial of a number", params: [{ name: "number", type: "number", required: true, description: "Number (max 170)", default: "10" }], format: "json", category: "tools" },
+  { path: "/api/math/fibonacci", method: "GET", description: "Generate Fibonacci sequence", params: [{ name: "count", type: "number", required: false, description: "Number of terms", default: "10" }], format: "json", category: "tools" },
+  { path: "/api/math/bmi", method: "GET", description: "Calculate BMI (Body Mass Index)", params: [{ name: "weight", type: "number", required: true, description: "Weight in kg", default: "70" }, { name: "height", type: "number", required: true, description: "Height in cm", default: "175" }, { name: "unit", type: "string", required: false, description: "metric or imperial", default: "metric" }], format: "json", category: "tools" },
+];
+
+export const newEncodingEndpoints: ApiEndpoint[] = [
+  { path: "/api/encode/hex", method: "GET", description: "Encode or decode text to/from hex", params: [{ name: "text", type: "string", required: true, description: "Text to encode/decode", default: "Hello" }, { name: "decode", type: "string", required: false, description: "Set to '1' to decode" }], format: "json", category: "tools" },
+  { path: "/api/encode/binary", method: "GET", description: "Encode or decode text to/from binary", params: [{ name: "text", type: "string", required: true, description: "Text to encode/decode", default: "Hi" }, { name: "decode", type: "string", required: false, description: "Set to '1' to decode" }], format: "json", category: "tools" },
+  { path: "/api/encode/rot13", method: "GET", description: "Apply ROT13 cipher to text", params: [{ name: "text", type: "string", required: true, description: "Text to transform", default: "Hello" }], format: "json", category: "tools" },
+  { path: "/api/encode/morse", method: "GET", description: "Convert text to Morse code", params: [{ name: "text", type: "string", required: true, description: "Text to convert", default: "SOS" }], format: "json", category: "tools" },
+  { path: "/api/encode/jwt-decode", method: "POST", description: "Decode a JWT token (header and payload)", params: [{ name: "token", type: "string", required: true, description: "JWT token string" }], format: "json", category: "dev-tools" },
+];
+
+export const newQrEndpoints: ApiEndpoint[] = [
+  { path: "/api/qr/wifi", method: "GET", description: "Generate a WiFi QR code", params: [{ name: "ssid", type: "string", required: true, description: "WiFi network name", default: "MyWiFi" }, { name: "password", type: "string", required: true, description: "WiFi password", default: "pass123" }, { name: "encryption", type: "string", required: false, description: "WPA, WEP, or nopass", default: "WPA" }], format: "json", category: "tools" },
+  { path: "/api/qr/vcard", method: "GET", description: "Generate a vCard contact QR code", params: [{ name: "name", type: "string", required: true, description: "Full name", default: "Tracker Wanga" }, { name: "phone", type: "string", required: false, description: "Phone number" }, { name: "email", type: "string", required: false, description: "Email address" }, { name: "org", type: "string", required: false, description: "Organization" }], format: "json", category: "tools" },
+];
+
+export const newGamesEndpoints: ApiEndpoint[] = [
+  { path: "/api/games/8ball", method: "GET", description: "Ask the magic 8-ball a question", params: [], format: "json", category: "games" },
+  { path: "/api/games/this-day", method: "GET", description: "Get historical events that happened today", params: [], format: "json", category: "games" },
+  { path: "/api/games/numbers", method: "GET", description: "Get interesting facts about a number", params: [{ name: "number", type: "number", required: true, description: "Any number", default: "42" }], format: "json", category: "games" },
+  { path: "/api/games/programming-joke", method: "GET", description: "Get a random programming joke", params: [], format: "json", category: "games" },
+];
+
+export const newOtpEndpoints: ApiEndpoint[] = [
+  { path: "/api/auth/generate-otp", method: "POST", description: "Generate a one-time password with WhatsApp link", params: [{ name: "phone", type: "string", required: true, description: "Phone number", default: "254758476795" }], format: "json", category: "tools" },
+  { path: "/api/auth/verify-otp", method: "POST", description: "Verify a one-time password", params: [{ name: "phone", type: "string", required: true, description: "Phone number" }, { name: "code", type: "string", required: true, description: "OTP code to verify" }], format: "json", category: "tools" },
+];
+
+export const newPdfEndpoints: ApiEndpoint[] = [
+  { path: "/api/tools/generate-pdf", method: "POST", description: "Generate a beautifully formatted PDF document with title, subtitle, watermark, colors, profile image, and logo", params: [{ name: "title", type: "string", required: false, description: "Document title", default: "My Document" }, { name: "subtitle", type: "string", required: false, description: "Document subtitle" }, { name: "text", type: "string", required: true, description: "Content text (supports # headings and ## subheadings)", default: "Hello World" }, { name: "author", type: "string", required: false, description: "Author name" }, { name: "footer", type: "string", required: false, description: "Footer text" }, { name: "watermark", type: "string", required: false, description: "Watermark text (e.g. CONFIDENTIAL)" }, { name: "color", type: "string", required: false, description: "Primary color hex", default: "#7C3AED" }, { name: "profileImage", type: "string", required: false, description: "Profile image URL" }, { name: "logo", type: "string", required: false, description: "Logo image URL" }], format: "json", category: "tools" },
+  { path: "/api/tools/generate-invoice", method: "POST", description: "Generate a professional invoice PDF with company branding, line items, and totals", params: [{ name: "companyName", type: "string", required: true, description: "Your company name" }, { name: "invoiceNumber", type: "string", required: true, description: "Invoice number" }, { name: "date", type: "string", required: true, description: "Invoice date" }, { name: "from", type: "object", required: true, description: "Sender info: name, email, phone, address" }, { name: "to", type: "object", required: true, description: "Recipient info: name, email, phone, address" }, { name: "items", type: "array", required: true, description: "Line items: description, quantity, unitPrice" }, { name: "currency", type: "string", required: false, description: "Currency code", default: "KES" }, { name: "notes", type: "string", required: false, description: "Additional notes" }], format: "json", category: "tools" },
+];
+
+// Update allEndpoints to include all new endpoints
+export const allNewEndpoints: ApiEndpoint[] = [
+  ...newTmdbEndpoints,
+  ...newContentEndpoints,
+  ...newLocalToolEndpoints,
+  ...newSocialEndpoints,
+  ...newWhatsAppEndpoints,
+  ...newEmailEndpoints,
+  ...newTimeEndpoints,
+  ...newMathEndpoints,
+  ...newEncodingEndpoints,
+  ...newQrEndpoints,
+  ...newGamesEndpoints,
+  ...newOtpEndpoints,
+  ...newPdfEndpoints,
+];
+
+export const allEndpointsComplete: ApiEndpoint[] = [
+  ...allEndpoints,
+  ...allNewEndpoints,
+];
