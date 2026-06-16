@@ -1,44 +1,45 @@
-const WAIFU_PICS_BASE = "https://api.waifu.pics/sfw";
-const NEKOS_BEST_BASE = "https://nekos.best/api/v2";
-
-const waifuPicsTypes = [
-  "waifu", "neko", "shinobu", "megumin", "bully", "cuddle", "cry", "hug",
-  "awoo", "kiss", "lick", "pat", "smug", "bonk", "yeet", "blush", "smile",
-  "wave", "highfive", "handhold", "nom", "bite", "slap", "kill", "happy",
-  "wink", "poke", "dance", "cringe",
+const SOURCES = [
+  {
+    name: "waifu.pics",
+    url: (type: string) => `https://api.waifu.pics/sfw/${type}`,
+    extract: (data: any) => data.url,
+    types: ["waifu","neko","shinobu","megumin","bully","cuddle","cry","hug","awoo","kiss","lick","pat","smug","bonk","yeet","blush","smile","wave","highfive","handhold","nom","bite","slap","kill","happy","wink","poke","dance","cringe"]
+  },
+  {
+    name: "nekos.best",
+    url: (type: string) => `https://nekos.best/api/v2/${type}`,
+    extract: (data: any) => data.results?.[0]?.url,
+    types: ["highfive","happy","sleep","handhold","laugh","bite","poke","tickle","kiss","wave","thumbsup","stare","cuddle","smile","baka","blush","think","pout","facepalm","wink","shoot","yawn","nod","cry","punch","dance","nervous","hug"]
+  },
 ];
 
-const nekosBestTypes = [
-  "highfive", "happy", "sleep", "handhold", "laugh", "bite",
-  "poke", "tickle", "kiss", "wave", "thumbsup", "stare",
-  "cuddle", "smile", "baka", "blush", "think", "pout",
-  "facepalm", "wink", "shoot", "yawn", "nod", "cry",
-  "punch", "dance", "nervous", "hug",
-];
+async function fetchWithTimeout(url: string, timeoutMs = 8000): Promise<any> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
 
 export async function fetchAnimeImage(type: string): Promise<{ url: string; type: string; source: string }> {
   const normalizedType = type.toLowerCase().trim();
-
-  if (waifuPicsTypes.includes(normalizedType)) {
-    const res = await fetch(`${WAIFU_PICS_BASE}/${normalizedType}`);
-    if (!res.ok) throw new Error(`waifu.pics returned ${res.status}`);
-    const data = await res.json();
-    return { url: data.url, type: normalizedType, source: "waifu.pics" };
+  for (const source of SOURCES) {
+    if (!source.types.includes(normalizedType)) continue;
+    try {
+      const data = await fetchWithTimeout(source.url(normalizedType));
+      if (data) {
+        const url = source.extract(data);
+        if (url) return { url, type: normalizedType, source: source.name };
+      }
+    } catch {}
   }
-
-  if (nekosBestTypes.includes(normalizedType)) {
-    const res = await fetch(`${NEKOS_BEST_BASE}/${normalizedType}`);
-    if (!res.ok) throw new Error(`nekos.best returned ${res.status}`);
-    const data = await res.json();
-    const result = data.results?.[0];
-    return {
-      url: result?.url || "",
-      type: normalizedType,
-      source: "nekos.best",
-    };
-  }
-
-  throw new Error(`Unknown anime type: ${normalizedType}. Available: ${waifuPicsTypes.join(", ")}`);
+  throw new Error(`Could not fetch anime image for "${normalizedType}"`);
 }
 
-export { waifuPicsTypes, nekosBestTypes };
+export const waifuPicsTypes = SOURCES[0].types;
+export const nekosBestTypes = SOURCES[1].types;

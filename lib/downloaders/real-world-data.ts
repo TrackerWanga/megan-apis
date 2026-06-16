@@ -1,143 +1,105 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
+import axios from 'axios';
 
-const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
-
-// ─── NEWS ──────────────────────────────────────────────────────────────────
-
-export async function getGlobalNews() {
-  const res = await axios.get("https://feeds.bbci.co.uk/news/world/rss.xml", { headers: { "User-Agent": UA }, timeout: 15000 });
-  const $ = cheerio.load(res.data, { xmlMode: true });
-  const articles: any[] = [];
-  $("item").each((_, el) => {
-    if (articles.length < 15) {
-      articles.push({
-        title: $(el).find("title").text(),
-        description: $(el).find("description").text(),
-        link: $(el).find("link").text(),
-        pubDate: $(el).find("pubDate").text(),
-        thumbnail: $(el).find("media\\:thumbnail, thumbnail").attr("url") || null,
-        source: "BBC News",
-      });
-    }
-  });
-  return { source: "BBC World News RSS", count: articles.length, articles };
-}
-
-export async function getKenyaNews() {
-  const res = await axios.get("https://news.google.com/rss?hl=en-KE&gl=KE&ceid=KE:en", { headers: { "User-Agent": UA }, timeout: 15000 });
-  const $ = cheerio.load(res.data, { xmlMode: true });
-  const articles: any[] = [];
-  $("item").each((_, el) => {
-    if (articles.length < 20) {
-      const title = $(el).find("title").text();
-      const sourceMatch = title.match(/- (.*?)$/);
-      const cleanTitle = sourceMatch ? title.replace(/- .*$/, "").trim() : title;
-      const source = sourceMatch ? sourceMatch[1].trim() : "Unknown";
-      articles.push({
-        title: cleanTitle, source,
-        link: $(el).find("link").text(),
-        pubDate: $(el).find("pubDate").text(),
-        description: $(el).find("description").text().replace(/<[^>]*>/g, "").substring(0, 300),
-      });
-    }
-  });
-  return { source: "Google News Kenya RSS", count: articles.length, articles };
-}
-
-// ─── CRYPTO ────────────────────────────────────────────────────────────────
+const cryptoFallback: Record<string, any> = {};
 
 export async function getCryptoPrice(coin: string) {
   try {
     const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd,kes&include_24hr_change=true`, {
-      headers: { "User-Agent": UA, "Accept": "application/json" }, timeout: 10000,
+      headers: { "User-Agent": "Mozilla/5.0", "Accept": "application/json" }, timeout: 10000,
     });
     const data = res.data[coin];
     if (!data) throw new Error(`Coin "${coin}" not found`);
-    return { coin, price_usd: data.usd, price_kes: data.kes, change_24h_percent: data.usd_24h_change?.toFixed(2) || null };
+    const result = { coin, price_usd: data.usd, price_kes: data.kes, change_24h_percent: data.usd_24h_change?.toFixed(2) || null };
+    cryptoFallback[coin] = result;
+    return result;
   } catch (e: any) {
-    // Fallback: return cached-ish data if CoinGecko rate limits
-    throw new Error(`Crypto fetch failed: ${e.message}. Try again in a moment.`);
+    if (cryptoFallback[coin]) return cryptoFallback[coin];
+    try {
+      const res = await axios.get(`https://api.coincap.io/v2/assets/${coin}`, { timeout: 8000 });
+      const d = res.data.data;
+      return { coin, price_usd: parseFloat(d.priceUsd).toFixed(2), price_kes: (parseFloat(d.priceUsd) * 130).toFixed(2), change_24h_percent: parseFloat(d.changePercent24Hr).toFixed(2) };
+    } catch {
+      throw new Error(`Crypto fetch failed: ${e.message}. Try again in a moment.`);
+    }
+  }
+}
+
+export async function getGlobalNews() {
+  try {
+    const res = await axios.get('https://newsapi.org/v2/top-headlines?category=general&language=en&pageSize=5', {
+      headers: { "User-Agent": "Mozilla/5.0" }, timeout: 10000,
+    });
+    return res.data.articles || [];
+  } catch {
+    return { error: 'Failed to fetch global news', articles: [] };
+  }
+}
+
+export async function getKenyaNews() {
+  try {
+    const res = await axios.get('https://newsapi.org/v2/top-headlines?country=ke&pageSize=5', {
+      headers: { "User-Agent": "Mozilla/5.0" }, timeout: 10000,
+    });
+    return res.data.articles || [];
+  } catch {
+    return { error: 'Failed to fetch Kenya news', articles: [] };
   }
 }
 
 export async function getAllCryptos() {
-  const top10 = ["bitcoin", "ethereum", "tether", "binancecoin", "solana", "ripple", "usd-coin", "cardano", "dogecoin", "avalanche-2"];
   try {
-    const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${top10.join(",")}&vs_currencies=usd,kes&include_24hr_change=true`, {
-      headers: { "User-Agent": UA, "Accept": "application/json" }, timeout: 12000,
+    const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false', {
+      headers: { "User-Agent": "Mozilla/5.0" }, timeout: 10000,
     });
-    const coins: any[] = [];
-    const nameMap: Record<string, string> = {
-      bitcoin: "BTC", ethereum: "ETH", tether: "USDT", binancecoin: "BNB", solana: "SOL",
-      ripple: "XRP", "usd-coin": "USDC", cardano: "ADA", dogecoin: "DOGE", "avalanche-2": "AVAX",
-    };
-    for (const [name, price] of Object.entries(res.data)) {
-      const p = price as any;
-      coins.push({ name, symbol: nameMap[name] || name.substring(0, 3).toUpperCase(), price_usd: p.usd, price_kes: p.kes, change_24h: p.usd_24h_change?.toFixed(2) || "0" });
-    }
-    return { count: coins.length, coins, updated: new Date().toISOString(), source: "CoinGecko" };
-  } catch (e: any) {
-    throw new Error(`Crypto fetch failed: ${e.message}. CoinGecko may be rate-limiting. Try again shortly.`);
+    return res.data.map((coin: any) => ({
+      id: coin.id,
+      symbol: coin.symbol,
+      name: coin.name,
+      price_usd: coin.current_price,
+      market_cap: coin.market_cap,
+      change_24h: coin.price_change_percentage_24h
+    }));
+  } catch {
+    return { error: 'Failed to fetch crypto list', data: [] };
   }
 }
-
-// ─── FOREX ─────────────────────────────────────────────────────────────────
 
 export async function getForexRates() {
   try {
-    // Try ExchangeRate-API first (free tier, more reliable)
-    const res = await axios.get("https://api.exchangerate-api.com/v4/latest/USD", { headers: { "User-Agent": UA }, timeout: 10000 });
-    const rates = res.data.rates;
+    const res = await axios.get('https://api.exchangerate-api.com/v4/latest/USD', { timeout: 10000 });
     return {
-      base: "USD",
-      date: res.data.date || new Date().toISOString().split("T")[0],
-      rates: {
-        KES: rates.KES, EUR: rates.EUR, GBP: rates.GBP,
-        UGX: rates.UGX, TZS: rates.TZS, NGN: rates.NGN, ZAR: rates.ZAR,
-        USD: 1,
-      },
-      source: "ExchangeRate-API",
+      base: 'USD',
+      rates: res.data.rates,
+      timestamp: res.data.time_last_updated
     };
   } catch {
-    // Fallback to frankfurter
-    const res = await axios.get("https://api.frankfurter.app/latest?from=USD", { headers: { "User-Agent": UA }, timeout: 10000 });
-    const rates = res.data.rates;
-    return {
-      base: "USD", date: res.data.date,
-      rates: { KES: rates.KES || 129, EUR: rates.EUR || 0.85, GBP: rates.GBP || 0.74, USD: 1 },
-      source: "Frankfurter/ECB (some rates estimated)",
-    };
+    return { error: 'Failed to fetch forex rates', rates: {} };
   }
 }
 
-export async function convertForex(amount: number, from: string, to: string) {
-  const res = await axios.get(`https://api.exchangerate-api.com/v4/latest/${from.toUpperCase()}`, {
-    headers: { "User-Agent": UA }, timeout: 10000,
-  });
-  const rate = res.data.rates[to.toUpperCase()];
-  if (!rate) throw new Error(`Currency "${to.toUpperCase()}" not found`);
-  return {
-    amount, from: from.toUpperCase(), to: to.toUpperCase(),
-    result: amount * rate, rate,
-    date: res.data.date || new Date().toISOString().split("T")[0],
-    source: "ExchangeRate-API",
-  };
+export async function convertForex(from: string, to: string, amount: number) {
+  try {
+    const rates = await getForexRates();
+    if (rates.error) throw new Error('Failed to get rates');
+    const rate = rates.rates[to.toUpperCase()] / rates.rates[from.toUpperCase()];
+    return { from, to, amount, converted: amount * rate, rate };
+  } catch {
+    return { error: 'Failed to convert currency', result: 0 };
+  }
 }
 
-// ─── WEATHER ───────────────────────────────────────────────────────────────
-
-export async function getWeather(city: string) {
-  const res = await axios.get(`https://wttr.in/${encodeURIComponent(city)}?format=j1`, { headers: { "User-Agent": UA }, timeout: 10000 });
-  const data = res.data;
-  const current = data.current_condition?.[0];
-  return {
-    city,
-    temperature_c: current?.temp_C,
-    feelsLike_c: current?.FeelsLikeC,
-    humidity: current?.humidity,
-    description: current?.weatherDesc?.[0]?.value,
-    windSpeed_kmh: current?.windspeedKmph,
-    visibility_km: current?.visibility,
-  };
+export async function getWeather(city: string = 'Nairobi') {
+  try {
+    const res = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=demo`, { timeout: 10000 });
+    return {
+      city: res.data.name,
+      temp: res.data.main.temp,
+      feels_like: res.data.main.feels_like,
+      humidity: res.data.main.humidity,
+      description: res.data.weather[0].description,
+      wind_speed: res.data.wind.speed
+    };
+  } catch {
+    return { error: 'Failed to fetch weather', temp: 0, city };
+  }
 }

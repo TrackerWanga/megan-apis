@@ -1,5 +1,5 @@
 // ─── Megan APIs — Cloudflare Worker (API Gateway + Frontend) ───────────────
-const RENDER_URL = "https://megan-apis.onrender.com";
+const RENDER_URL = "https://megan-apis-33r1.onrender.com";
 const PAGES_URL = "https://megan-apis-frontend.pages.dev";
 
 const corsHeaders = {

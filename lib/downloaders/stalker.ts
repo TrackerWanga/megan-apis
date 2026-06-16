@@ -37,7 +37,7 @@ async function fetchHTML(url: string, headers: Record<string, string> = {}): Pro
 
 export async function githubStalk(username: string) {
   const data = await fetchJSON(`https://api.github.com/users/${encodeURIComponent(username)}`);
-  if (!data || data.message) {
+  if (!data || (data.message && data.message !== "Not Found")) {
     return { success: false, creator: CREATOR, error: data?.message || `GitHub user "${username}" not found` };
   }
   return {
