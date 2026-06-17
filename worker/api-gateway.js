@@ -1,11 +1,12 @@
-// ─── Megan APIs — Cloudflare Worker (API Gateway + Frontend) ───────────────
+// ─── Megan APIs — Cloudflare Worker (API Gateway + Frontend + Megan Coins) ──
 const RENDER_URL = "https://megan-apis-33r1.onrender.com";
 const PAGES_URL = "https://megan-apis-frontend.pages.dev";
+const COINS_URL = "https://megan-coins.trackerwanga254.workers.dev";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS, DELETE",
-  "Access-Control-Allow-Headers": "Content-Type, x-api-key, x-admin-password",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, x-api-key, x-admin-password, Authorization",
 };
 
 function corsResponse(body, status = 200) {
@@ -41,13 +42,36 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // ─── API Routes → Validate & Proxy to Render ──────────────────────────
+    // ─── MEGAN COINS → Proxy to Coins Worker ────────────────────────────
+    if (path.startsWith("/coins/") || path.startsWith("/api/coins/")) {
+      const coinsPath = path.replace("/coins", "/api");
+      const coinsUrl = `${COINS_URL}${coinsPath}${url.search}`;
+      
+      if (request.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: corsHeaders });
+      }
+      
+      try {
+        const response = await fetch(coinsUrl, {
+          method: request.method,
+          headers: request.headers,
+          body: request.method !== "GET" ? request.body : undefined,
+        });
+        const mod = new Response(response.body, response);
+        Object.entries(corsHeaders).forEach(([k, v]) => mod.headers.set(k, v));
+        return mod;
+      } catch (e) {
+        return corsResponse(JSON.stringify({ error: "Coins service unavailable" }), 503);
+      }
+    }
+
+    // ─── API Routes → Validate & Proxy to Render ────────────────────────
     if (path.startsWith("/api/") || path.startsWith("/download/") || path.startsWith("/files/") || path.startsWith("/proxy") || path.startsWith("/stream")) {
       if (request.method === "OPTIONS") {
         return new Response(null, { status: 204, headers: corsHeaders });
       }
 
-      // Public routes
+      // Public routes (no API key needed)
       if (path === "/api/config/cards" || path === "/api/media/status" || path === "/api/keys/generate" || path.startsWith("/api/keys/")) {
         const response = await fetch(`${RENDER_URL}${path}${url.search}`, { method: request.method, headers: request.headers, body: request.body });
         const mod = new Response(response.body, response);
@@ -92,7 +116,7 @@ export default {
       return mod;
     }
 
-    // ─── Frontend → Serve from Cloudflare Pages ───────────────────────────
+    // ─── Frontend → Serve from Cloudflare Pages ─────────────────────────
     const frontendUrl = `${PAGES_URL}${path}${url.search}`;
     const frontendResponse = await fetch(frontendUrl, { method: request.method, headers: request.headers });
     return frontendResponse;
