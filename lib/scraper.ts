@@ -1021,6 +1021,44 @@ async function ytdownConvert(
   throw new Error("ytdown: CDN conversion timed out after 15 attempts");
 }
 
+
+// ─── Provider 8: FLVTO ───────────────────────────────────────────────────────
+async function flvtoConvert(
+  videoId: string,
+  format: "mp3" | "mp4"
+): Promise<{ downloadUrl: string; title: string }> {
+  const fileType = format === "mp3" ? "mp3" : "mp4";
+  
+  const res = await fetchWithTimeout(
+    "https://es.flvto.top/converter",
+    {
+      method: "POST",
+      headers: {
+        "Referer": "https://ytshortsdown.com/",
+        "Origin": "https://ytshortsdown.com",
+        "Content-Type": "application/json",
+        "User-Agent": USER_AGENT,
+      },
+      body: JSON.stringify({ id: videoId, fileType }),
+    },
+    20000
+  );
+
+  if (!res.ok) throw new Error(`flvto: HTTP ${res.status}`);
+  
+  const data = await safeJsonParse(res, "flvto");
+  
+  if (format === "mp3") {
+    if (data.link) return { downloadUrl: data.link, title: data.title || `video_${videoId}` };
+    throw new Error("flvto: no mp3 link");
+  } else {
+    const best = data.formats?.[0];
+    if (best?.url) return { downloadUrl: best.url, title: data.title || `video_${videoId}` };
+    throw new Error("flvto: no mp4 formats");
+  }
+}
+
+
 // ─── Provider chain ───────────────────────────────────────────────────────────
 
 type ConvertProvider = {
@@ -1029,6 +1067,7 @@ type ConvertProvider = {
 };
 
 const mp3Providers: ConvertProvider[] = [
+  { name: "flvto",     fn: flvtoConvert },
   { name: "ytdlpFile",  fn: ytdlpFileConvert },
   { name: "ytdown",     fn: ytdownConvert },
   { name: "invidious",  fn: invidiousConvert },
@@ -1043,6 +1082,7 @@ const mp3Providers: ConvertProvider[] = [
 // Invidious second — proxies through Invidious servers, bypasses VPS datacenter
 // IP blocks from YouTube without needing cookies.
 const mp4Providers: ConvertProvider[] = [
+  { name: "flvto",     fn: flvtoConvert },
   { name: "ytdlpFile",  fn: ytdlpFileConvert },
   { name: "ytdown",     fn: ytdownConvert },
   { name: "invidious",  fn: invidiousConvert },
