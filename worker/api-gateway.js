@@ -1,124 +1,111 @@
-// ─── Megan APIs — Cloudflare Worker (API Gateway + Frontend + Megan Coins) ──
+// ─── Megan APIs Gateway — API Routes Only ──────────────────────────────────
 const RENDER_URL = "https://megan-apis-33r1.onrender.com";
 const PAGES_URL = "https://master.megan-apis-frontend.pages.dev";
-const COINS_URL = "https://megan-coins.trackerwanga254.workers.dev";
+const AUTH_URL = "https://auth.megan.qzz.io";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, x-api-key, x-admin-password, Authorization",
+  "Access-Control-Allow-Credentials": "true",
 };
 
-function corsResponse(body, status = 200) {
-  return new Response(body, { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+function corsResponse(body, status) {
+  status = status || 200;
+  return new Response(body, { status: status, headers: Object.assign({}, corsHeaders, { "Content-Type": "application/json" }) });
+}
+
+async function proxyTo(url, request) {
+  try {
+    var response = await fetch(url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
+    });
+    var mod = new Response(response.body, response);
+    Object.keys(corsHeaders).forEach(function(k) { mod.headers.set(k, corsHeaders[k]); });
+    return mod;
+  } catch (e) {
+    return corsResponse(JSON.stringify({ error: "Service unavailable" }), 503);
+  }
 }
 
 function getApiKey(request) {
-  const url = new URL(request.url);
+  var url = new URL(request.url);
   return url.searchParams.get("apikey") || url.searchParams.get("api_key") || request.headers.get("x-api-key") || null;
-}
-
-async function validateKey(db, apikey) {
-  let result = await db.prepare("SELECT * FROM api_keys WHERE key = ? AND active = 1").bind(apikey).first();
-  if (result) return { ...result, source: "api_keys" };
-  result = await db.prepare("SELECT api_key as key, rate_limit, coins, is_admin FROM users WHERE api_key = ? AND active = 1").bind(apikey).first();
-  if (result) return { ...result, source: "users", name: "Admin" };
-  return null;
-}
-
-async function checkRateLimit(db, apikey) {
-  const today = new Date().toISOString().split("T")[0];
-  const usage = await db.prepare("SELECT count FROM usage WHERE api_key = ? AND date = ?").bind(apikey, today).first();
-  return usage ? usage.count : 0;
-}
-
-async function incrementUsage(db, apikey) {
-  const today = new Date().toISOString().split("T")[0];
-  await db.prepare("INSERT INTO usage (api_key, date, count) VALUES (?, ?, 1) ON CONFLICT(api_key, date) DO UPDATE SET count = count + 1").bind(apikey, today).run();
 }
 
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
-    const path = url.pathname;
+    var url = new URL(request.url);
+    var path = url.pathname;
+    var method = request.method;
 
-    // ─── MEGAN COINS → Proxy to Coins Worker ────────────────────────────
-    if (path.startsWith("/coins/") || path.startsWith("/api/coins/")) {
-      const coinsPath = path.replace("/coins", "/api");
-      const coinsUrl = `${COINS_URL}${coinsPath}${url.search}`;
-      
-      if (request.method === "OPTIONS") {
-        return new Response(null, { status: 204, headers: corsHeaders });
-      }
-      
-      try {
-        const response = await fetch(coinsUrl, {
-          method: request.method,
-          headers: request.headers,
-          body: request.method !== "GET" ? request.body : undefined,
-        });
-        const mod = new Response(response.body, response);
-        Object.entries(corsHeaders).forEach(([k, v]) => mod.headers.set(k, v));
-        return mod;
-      } catch (e) {
-        return corsResponse(JSON.stringify({ error: "Coins service unavailable" }), 503);
-      }
+    if (method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    // ─── API Routes → Validate & Proxy to Render ────────────────────────
+    // ═══ AUTH ROUTES → Auth Worker ═══
+    if (path.startsWith("/auth/") || path === "/login" || path === "/signup") {
+      return proxyTo(AUTH_URL + path + url.search, request);
+    }
+
+    // ═══ PUBLIC API ROUTES (no key needed) ═══
+    if (path === "/api/config/cards" || path === "/api/media/status" || path === "/api/status" || path === "/api/endpoints" || path === "/api/endpoints/search" || path === "/api/endpoints/categories" || path === "/api/endpoints/stats" || path === "/api/endpoints/category/ai" || path === "/health") {
+      return proxyTo(RENDER_URL + path + url.search, request);
+    }
+
+    // ═══ API KEY VALIDATION — via Auth Service ═══
     if (path.startsWith("/api/") || path.startsWith("/download/") || path.startsWith("/files/") || path.startsWith("/proxy") || path.startsWith("/stream")) {
-      if (request.method === "OPTIONS") {
-        return new Response(null, { status: 204, headers: corsHeaders });
+      
+      // Key generation — public
+      if (path === "/api/keys/generate" || path.startsWith("/api/keys/")) {
+        return proxyTo(RENDER_URL + path + url.search, request);
       }
 
-      // Public routes (no API key needed)
-      if (path === "/api/config/cards" || path === "/api/media/status" || path === "/api/keys/generate" || path.startsWith("/api/keys/")) {
-        const response = await fetch(`${RENDER_URL}${path}${url.search}`, { method: request.method, headers: request.headers, body: request.body });
-        const mod = new Response(response.body, response);
-        Object.entries(corsHeaders).forEach(([k, v]) => mod.headers.set(k, v));
-        return mod;
-      }
-
-      // Admin routes
+      // Admin routes — use admin password
       if (path.startsWith("/api/admin")) {
-        const response = await fetch(`${RENDER_URL}${path}${url.search}`, { method: request.method, headers: request.headers, body: request.body });
-        const mod = new Response(response.body, response);
-        Object.entries(corsHeaders).forEach(([k, v]) => mod.headers.set(k, v));
-        return mod;
+        return proxyTo(RENDER_URL + path + url.search, request);
       }
 
-      // API Key validation
-      const apikey = getApiKey(request);
+      // Validate API key
+      var apikey = getApiKey(request);
       if (!apikey) {
-        return corsResponse(JSON.stringify({ success: false, error: "API key required. Get one at https://apis.megan.qzz.io/keys", creator: "Megan APIs by Tracker Wanga | Falcon Tech" }), 401);
+        return corsResponse(JSON.stringify({ 
+          success: false, 
+          error: "API key required. Get one at https://apis.megan.qzz.io/keys",
+          creator: "Megan APIs by Tracker Wanga | Megan Tech" 
+        }), 401);
       }
 
-      const keyData = await validateKey(env.DB, apikey);
-      if (!keyData) {
-        return corsResponse(JSON.stringify({ success: false, error: "Invalid or revoked API key", creator: "Megan APIs by Tracker Wanga | Falcon Tech" }), 403);
-      }
-
-      if (!keyData.is_admin) {
-        const usage = await checkRateLimit(env.DB, apikey);
-        const limit = keyData.rate_limit || 50;
-        if (usage >= limit) {
-          return corsResponse(JSON.stringify({ success: false, error: `Rate limit exceeded (${limit}/day). Resets at midnight UTC.`, limit, usage, creator: "Megan APIs by Tracker Wanga | Falcon Tech" }), 429);
+      // Check key via Auth Service
+      try {
+        var keyCheck = await fetch(AUTH_URL + "/auth/verify-key", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: apikey, project: "megan-apis" }),
+        });
+        var keyResult = await keyCheck.json();
+        if (!keyResult.valid) {
+          return corsResponse(JSON.stringify({ 
+            success: false, 
+            error: "Invalid or revoked API key",
+            creator: "Megan APIs by Tracker Wanga | Megan Tech" 
+          }), 403);
         }
+      } catch (e) {
+        // Fallback: let Render handle validation for backward compatibility
+        return proxyTo(RENDER_URL + path + url.search, request);
       }
 
-      await incrementUsage(env.DB, apikey);
-      const cleanUrl = new URL(`${RENDER_URL}${path}${url.search}`);
+      // Forward to Render
+      var cleanUrl = new URL(RENDER_URL + path + url.search);
       cleanUrl.searchParams.delete("apikey");
       cleanUrl.searchParams.delete("api_key");
-      const response = await fetch(cleanUrl.toString(), { method: request.method, headers: request.headers, body: request.body });
-      const mod = new Response(response.body, response);
-      Object.entries(corsHeaders).forEach(([k, v]) => mod.headers.set(k, v));
-      return mod;
+      return proxyTo(cleanUrl.toString(), request);
     }
 
-    // ─── Frontend → Serve from Cloudflare Pages ─────────────────────────
-    const frontendUrl = `${PAGES_URL}${path}${url.search}`;
-    const frontendResponse = await fetch(frontendUrl, { method: request.method, headers: request.headers });
-    return frontendResponse;
+    // ═══ FRONTEND — Serve from Cloudflare Pages ═══
+    return proxyTo(PAGES_URL + path + url.search, request);
   },
 };

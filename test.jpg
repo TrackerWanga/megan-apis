@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Page Not Found</title>
+    <link rel="icon" href="/content/images/favicon2020.png" />
+    <link href="/content/themes/basic/bootstrap.css" rel="stylesheet" />
+    <link href="/content/magnificpopup/magnific-popup.css" rel="stylesheet" />
+    <link href="/content/fontawesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="/content/main/base.css" rel="stylesheet" />
+    <link href="/content/main/elements.css" rel="stylesheet" />
+    <link href="/content/main/grid.css" rel="stylesheet" />
+    <link href="/content/main/layout.css" rel="stylesheet" />
+    <link href="/content/main/style.css" rel="stylesheet" />
+    
+    <style>
+        #filedrag {
+            display: none;
+            font-weight: bold;
+            text-align: center;
+            padding: 1em 0;
+            margin: 1em 0;
+            color: #555;
+            border: 2px dashed #555;
+            border-radius: 7px;
+            cursor: default;
+        }
+        #filedrag.hover {
+            color: #f00;
+            border-color: #f00;
+            border-style: solid;
+            box-shadow: inset 0 3px 4px #888;
+        }
+        ul {
+            list-style: none outside none;
+            padding-left: 0;
+            margin: 0;
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRFZ6KQ9EE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-MRFZ6KQ9EE');
+    </script>
+</head>
+<body>
+    <div id="header">
+        <div class="row">
+            <div class="span2">
+                <a href="/" id="logo">
+                    <img src="/content/images/ocrspacelogo2020b.png" alt="Online OCR API Logo" class="responsive-img">
+                </a>
+            </div>
+            <div class="span10">
+                <a class="toggleMenu" id="mobile-menu-trigger" href="#"><i class="fa fa-bars"></i></a>
+                <ul class="nav" style="display:block;">
+                    <li><a href="/">Online OCR</a></li>
+                    <li><a href="/ocrapi"><code>Free OCR API</code></a></li>
+                    <li>
+                        <a href="/contact">Support</a>
+                        <ul class="children-menu">
+                            <li><a href="/faq">FAQ</a></li>
+                            <li><a href="https://forum.ocr.space/c/ocr-api/10" target="_blank">OCR API Forum</a></li>
+                            <li><a href="https://status.ocr.space" target="_blank">Live OCR API Status</a></li>
+                            <li><a href="/copyfish">Copyfish OCR</a></li>
+                            <li><a href="/privacypolicy">Privacy Policy</a></li>
+                            <li><a href="/blog">OCR &amp; More Blog</a></li>
+                            <li><a href="/contact">Contact Us</a></li>
+                            <li><a href="/about">About Us</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+﻿
+
+
+<div id="content">
+    <!--  CONTENT   -->
+    <div id="page-header">
+        <div class="row">
+            <div class="span12 whitebg">
+                <h1>PAGE NOT FOUND</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <h3 class="headline">
+                <span>Page Not Found</span>
+            </h3>
+        </div> <br />
+
+        <div class="span12">
+            <p>The requested page was not found. Please check the URL.</p>
+
+        </div>
+    </div>
+</div>
+
+    <div class="bigborder"></div>
+    <div class="row">
+        <div class="span3">
+            <a href="https://status.ocr.space"><i class="fa fa-bar-chart"></i> Live OCR API Performance</a><br />
+            <a href="https://chrome.google.com/webstore/detail/copyfish-%F0%9F%90%9F-free-ocr-soft/eenjdnjldapjajjofmldgmkjaienebbj">
+                <i class="fa fa-gear"></i> Our OCR Browser Extension
+            </a><br />
+            <a href="https://ui.vision"><i class="fa fa-barcode"></i> Open-Source RPA Software</a><br />
+            <a href="https://ui.vision/rpa/docs/selenium-ide"><i class="fa fa-gear"></i> Selenium IDE</a><br />
+        </div>
+        <div class="span9 nomargin">
+            Need to automate browser tasks like web testing or form filling?
+            Check out our sister product <a href="https://ui.vision">Ui.Vision</a> - a free and open-source <a href="https://ui.vision/rpa">RPA</a> browser extension with
+            <a href="https://chromewebstore.google.com/detail/uivision/gcbalfbdmfieckjlnblleoemohcganoc">over 100,000 users</a>
+            that leverages our computer vision and OCR.Space technology to power automation workflows.
+            <br /><br />
+            Do you have an OCR API question? Please <a href="/contact">email us</a>
+            or visit the <a href="https://forum.ocr.space/c/ocr-api">OCR API Forum</a> - we love to answer OCR questions.
+        </div>
+    </div>
+    <div class="bigborder2"></div>
+    <div id="footer">
+        <div id="footer-bottom">
+            <div class="row">
+                <div class="span12" id="footer-bottom-widget-area-1">
+                    <div class="widget widget_text">
+                        <div class="textwidget">
+                            <p class="last">
+                                &#169; Copyright 2016-2026 - <i>OCR.SPACE</i> is a service of a9t9 software GmbH.
+                                <a href="/privacypolicy">Website and OCR API Privacy Policy</a> -
+                                System status: <a href="https://status.ocr.space">OCR API Public Status Dashboard</a> - OCR API <span id="site-version">V5.17.3</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/scripts/modernizr-2.6.2.js"></script>
+    <script src="/scripts/jquery-2.1.3.min.js"></script>
+    <script async src="/scripts/basic/bootstrap.min.js"></script>
+    <script async src="/scripts/magnificpopup/jquery.magnific-popup.min.js"></script>
+    <script src="/scripts/pdf.js/pdf.js"></script>
+    <script src="/scripts/pdf.js/pdf.worker.js"></script>
+    <script src="/scripts/ocr/jquery-ocr-starter.js"></script>
+    <script defer src="/scripts/layout/plugins.js"></script>
+    <script defer src="/scripts/layout/script.js"></script>
+    
+</body>
+</html>
