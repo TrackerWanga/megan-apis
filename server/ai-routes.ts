@@ -13,7 +13,7 @@ async function chatEverywhereProxy(prompt: string, systemPrompt: string): Promis
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!response.ok) throw new Error(`ChatEverywhere error ${response.status}`);
+  if (!response.ok) throw new Error(`Megan AI error ${response.status}`);
   return response.text();
 }
 
@@ -256,13 +256,13 @@ export function registerAIRoutes(app: Express): void {
       return res.json({
         success: true,
         creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
-        provider: "ChatEverywhere",
+        provider: "Megan AI",
         model: "unsplash",
         url: finalUrl,
         prompt: prompt.trim(),
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, error: error.message, provider: "ChatEverywhere" });
+      return res.status(500).json({ success: false, error: error.message, provider: "Megan AI" });
     }
   });
 
@@ -282,7 +282,7 @@ export function registerAIRoutes(app: Express): void {
       return res.json({
         success: true,
         creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
-        provider: "ChatEverywhere",
+        provider: "Megan AI",
         original: text.trim(),
         translated: result,
         from: sourceLang,
@@ -307,7 +307,7 @@ export function registerAIRoutes(app: Express): void {
       return res.json({
         success: true,
         creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
-        provider: "ChatEverywhere",
+        provider: "Megan AI",
         summary: result,
       });
     } catch (error: any) {
@@ -330,7 +330,7 @@ export function registerAIRoutes(app: Express): void {
       return res.json({
         success: true,
         creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
-        provider: "ChatEverywhere",
+        provider: "Megan AI",
         code: result,
         language: language || "auto",
       });
@@ -353,7 +353,7 @@ export function registerAIRoutes(app: Express): void {
       return res.json({
         success: true,
         creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
-        provider: "ChatEverywhere",
+        provider: "Megan AI",
         tool: "AI Scanner",
         analysis: result,
       });
@@ -376,7 +376,7 @@ export function registerAIRoutes(app: Express): void {
       return res.json({
         success: true,
         creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
-        provider: "ChatEverywhere",
+        provider: "Megan AI",
         tool: "AI Humanizer",
         original: text.trim(),
         humanized: result,
