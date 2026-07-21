@@ -1,20 +1,14 @@
 import type { Express, Request, Response } from "express";
 
-const CHAT_EVERYWHERE_BASE = "https://chateverywhere.app";
+const MEGAN_AI_BASE = "https://ai.megan.qzz.io";
 
-async function chatEverywhereProxy(prompt: string, systemPrompt: string): Promise<string> {
-  const body = {
-    messages: [{ role: "user", content: prompt.trim() }],
-    prompt: systemPrompt,
-    temperature: 0.7,
-  };
-  const response = await fetch(`${CHAT_EVERYWHERE_BASE}/api/chat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) throw new Error(`Megan AI error ${response.status}`);
-  return response.text();
+async function aiProxy(prompt: string, systemPrompt: string): Promise<string> {
+  const url = `https://ai.megan.qzz.io/api/ai/chat?prompt=${encodeURIComponent(prompt)}&system=${encodeURIComponent(systemPrompt)}&api_key=megan_admin_master`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`AI error ${res.status}`);
+  const data = await res.json() as any;
+  if (data.success && data.text) return data.text;
+  throw new Error(data.error || "Empty response");
 }
 
 interface ChatEndpointConfig {
@@ -205,7 +199,7 @@ export function registerAIRoutes(app: Express): void {
       }
 
       try {
-        const text = await chatEverywhereProxy(prompt.trim(), ep.system);
+        const text = await aiProxy(prompt.trim(), ep.system);
         return res.json({
           status: true,
           creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
@@ -247,7 +241,7 @@ export function registerAIRoutes(app: Express): void {
     }
 
     try {
-      const imageUrl = `${CHAT_EVERYWHERE_BASE}/api/image?q=${encodeURIComponent(prompt.trim())}&width=960&height=640`;
+      const imageUrl = `${MEGAN_AI_BASE}/api/image?q=${encodeURIComponent(prompt.trim())}&width=960&height=640`;
       const response = await fetch(imageUrl, { redirect: "follow" });
 
       if (!response.ok) throw new Error(`Image fetch failed with status ${response.status}`);
@@ -278,7 +272,7 @@ export function registerAIRoutes(app: Express): void {
 
     try {
       const prompt = `Translate the following text from ${sourceLang} to ${targetLang}. Only return the translation, nothing else:\n\n${text.trim()}`;
-      const result = await chatEverywhereProxy(prompt, "You are a professional translator. Translate accurately and naturally.");
+      const result = await aiProxy(prompt, "You are a professional translator. Translate accurately and naturally.");
       return res.json({
         success: true,
         creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
@@ -300,7 +294,7 @@ export function registerAIRoutes(app: Express): void {
     }
 
     try {
-      const result = await chatEverywhereProxy(
+      const result = await aiProxy(
         `Summarize the following text concisely:\n\n${text.trim()}`,
         "You are an expert summarizer. Provide clear, concise summaries."
       );
@@ -323,7 +317,7 @@ export function registerAIRoutes(app: Express): void {
 
     try {
       const langNote = language ? ` Write in ${language}.` : "";
-      const result = await chatEverywhereProxy(
+      const result = await aiProxy(
         `${prompt.trim()}${langNote}`,
         "You are an expert programmer. Write clean, well-commented code. Return code blocks with proper formatting."
       );
@@ -346,7 +340,7 @@ export function registerAIRoutes(app: Express): void {
     }
 
     try {
-      const result = await chatEverywhereProxy(
+      const result = await aiProxy(
         `Analyze the following text and determine if it was written by AI or a human. Provide:\n1. Verdict: "AI-generated" or "Human-written" or "Mixed"\n2. Confidence percentage\n3. Key indicators\n\nText:\n"""${text.trim()}"""`,
         "You are an expert AI content detection specialist. Be thorough and accurate."
       );
@@ -369,7 +363,7 @@ export function registerAIRoutes(app: Express): void {
     }
 
     try {
-      const result = await chatEverywhereProxy(
+      const result = await aiProxy(
         `Rewrite the following text to sound completely human-written. Make it natural and conversational. Keep the same meaning.\n\nOriginal:\n"""${text.trim()}"""`,
         "You are a skilled human writer. Rewrite AI-generated text to sound natural. Output only the rewritten text."
       );
