@@ -3,7 +3,7 @@ import type { Express, Request, Response } from "express";
 const MEGAN_AI_BASE = "https://ai.megan.qzz.io";
 
 async function aiProxy(prompt: string, systemPrompt: string): Promise<string> {
-  const url = `https://ai.megan.qzz.io/api/ai/chat?prompt=${encodeURIComponent(prompt)}&system=${encodeURIComponent(systemPrompt)}&api_key=megan_admin_master`;
+  const url = `${MEGAN_AI_BASE}/api/ai/workers/glm?prompt=${encodeURIComponent(prompt)}&system=${encodeURIComponent(systemPrompt)}&api_key=megan_admin_master`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`AI error ${res.status}`);
   const data = await res.json() as any;
