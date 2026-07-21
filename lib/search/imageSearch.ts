@@ -68,7 +68,7 @@ export async function searchImages(query: string, count = 10): Promise<ImageSear
 
     return {
       success: true,
-      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
       query,
       count: results.length,
       results,
@@ -76,7 +76,7 @@ export async function searchImages(query: string, count = 10): Promise<ImageSear
   } catch (err: any) {
     return {
       success: false,
-      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
       error: err.message || "Image search failed",
     };
   }

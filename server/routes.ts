@@ -285,7 +285,7 @@ export async function registerRoutes(
       const results = await searchSongs(q.trim());
       return res.json({
         success: true,
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         query: results.query,
         items: results.items,
       });
@@ -410,7 +410,7 @@ export async function registerRoutes(
           ...result,
           downloadUrl: fileUrl || result.downloadUrl,
           proxyUrl,
-          creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+          creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
           searchQuery: url,
           searchResult: {
             title: firstResult.title,
@@ -425,7 +425,7 @@ export async function registerRoutes(
         ...result,
         downloadUrl: fileUrl || result.downloadUrl,
         proxyUrl,
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
       });
     } catch (error: any) {
       return res.status(500).json({
@@ -512,7 +512,7 @@ export async function registerRoutes(
       const videoId = mp3?.videoId || mp4?.videoId || extractVideoId(url) || "";
       return res.json({
         success: !!(mp3?.success || mp4?.success),
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         title,
         videoId,
         thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
@@ -541,7 +541,7 @@ export async function registerRoutes(
           const track = lrcData[0];
           return res.json({
             success: true,
-            creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+            creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
             query: searchTerm,
             title: track.trackName || track.name,
             author: track.artistName,
@@ -554,7 +554,7 @@ export async function registerRoutes(
       }
       return res.status(404).json({
         success: false,
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         error: `No lyrics found for "${searchTerm}".`,
       });
     } catch (error: any) {
@@ -694,7 +694,7 @@ export async function registerRoutes(
         url = `https://www.youtube.com/watch?v=${searchResults.items[0].id}`;
       }
       const result = await getDownloadInfo(url, "mp3");
-      return res.json({ ...result, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", format: "mp3" });
+      return res.json({ ...result, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", format: "mp3" });
     } catch (error: any) {
       return res.status(500).json({ success: false, error: error.message || "YouTube MP3 download failed" });
     }
@@ -713,7 +713,7 @@ export async function registerRoutes(
         url = `https://www.youtube.com/watch?v=${searchResults.items[0].id}`;
       }
       const result = await getDownloadInfo(url, "mp4");
-      return res.json({ ...result, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", format: "mp4" });
+      return res.json({ ...result, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", format: "mp4" });
     } catch (error: any) {
       return res.status(500).json({ success: false, error: error.message || "YouTube MP4 download failed" });
     }
@@ -729,7 +729,7 @@ export async function registerRoutes(
       if (!videoId) return res.status(400).json({ success: false, error: "Invalid YouTube URL." });
       return res.json({
         success: true,
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         videoId,
         url: `https://www.youtube.com/watch?v=${videoId}`,
         thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
@@ -748,7 +748,7 @@ export async function registerRoutes(
         return res.status(400).json({ success: false, error: "Query parameter 'q' is required." });
       }
       const results = await searchSongs(q.trim());
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...results });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...results });
     } catch (error: any) {
       return res.status(500).json({ success: false, error: error.message || "YouTube search failed" });
     }
@@ -764,7 +764,7 @@ export async function registerRoutes(
       if (!result.success) return res.json(result);
       return res.json({
         success: true,
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         title: result.title,
         author: result.author,
         audioUrl: result.audioUrl || result.videoUrl,
@@ -785,7 +785,7 @@ export async function registerRoutes(
       if (!result.success) return res.json(result);
       return res.json({
         success: true,
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         title: result.title,
         author: result.author,
         hasVideo: !!result.videoUrl,
@@ -846,7 +846,7 @@ export async function registerRoutes(
       if (!result.success) return res.json(result);
       return res.json({
         success: true,
-        creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         title: result.title,
         author: result.author,
         mediaCount: result.media?.length || 0,
@@ -868,7 +868,7 @@ export async function registerRoutes(
       const result = await searchSpotify(q.trim());
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "Spotify search failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "Spotify search failed" });
     }
   });
 
@@ -884,15 +884,15 @@ export async function registerRoutes(
       const result = await downloadSpotify(input.trim(), baseUrl);
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "Spotify download failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "Spotify download failed" });
     }
   });
 
   function spRespond(res: any, data: any) {
-    return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...data });
+    return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...data });
   }
   function spError(res: any, status: number, msg: string) {
-    return res.status(status).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: msg });
+    return res.status(status).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: msg });
   }
 
   app.get("/api/spotify/track/:id", async (req: any, res: any) => {
@@ -1264,7 +1264,7 @@ export async function registerRoutes(
       const result = await searchShazam(q.trim());
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "Shazam search failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "Shazam search failed" });
     }
   });
 
@@ -1275,7 +1275,7 @@ export async function registerRoutes(
       const result = await getTrackDetails(trackId);
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "Shazam track lookup failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "Shazam track lookup failed" });
     }
   });
 
@@ -1291,25 +1291,25 @@ export async function registerRoutes(
         const { audio, url: audioUrl } = req.body || {};
         if (audioUrl) {
           const audioRes = await fetch(audioUrl, { headers: { "User-Agent": "Mozilla/5.0" } });
-          if (!audioRes.ok) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Failed to download audio." });
+          if (!audioRes.ok) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Failed to download audio." });
           audioBuffer = Buffer.from(await audioRes.arrayBuffer());
         } else if (audio) {
           audioBuffer = Buffer.from(audio, "base64");
         } else {
-          return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Provide 'audio' (base64) or 'url' in request body." });
+          return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Provide 'audio' (base64) or 'url' in request body." });
         }
       }
-      if (audioBuffer.length < 1000) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Audio data too short." });
+      if (audioBuffer.length < 1000) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Audio data too short." });
       const result = await recognizeShazamFull(audioBuffer);
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "Shazam recognition failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "Shazam recognition failed" });
     }
   });
 
   // ─── IMAGE EFFECTS ─────────────────────────────────────────────────────────
   app.get("/api/ephoto/list", (_req, res) => {
-    return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", effects: listEphotoEffects() });
+    return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", effects: listEphotoEffects() });
   });
 
   app.post("/api/ephoto/generate", async (req, res) => {
@@ -1321,12 +1321,12 @@ export async function registerRoutes(
       const result = await generateEphoto(effect, texts);
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "Ephoto generation failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "Ephoto generation failed" });
     }
   });
 
   app.get("/api/photofunia/list", (_req, res) => {
-    return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", totalEffects: listPhotofuniaEffects().length, effects: listPhotofuniaEffects() });
+    return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", totalEffects: listPhotofuniaEffects().length, effects: listPhotofuniaEffects() });
   });
 
   app.post("/api/photofunia/generate", async (req, res) => {
@@ -1339,7 +1339,7 @@ export async function registerRoutes(
       const result = await generatePhotofunia(effect, textInputs, imageUrl);
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "PhotoFunia generation failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "PhotoFunia generation failed" });
     }
   });
 
@@ -1356,7 +1356,7 @@ export async function registerRoutes(
       const result = await generateEphoto(effectId, texts);
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "Ephoto generation failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "Ephoto generation failed" });
     }
   });
 
@@ -1371,7 +1371,7 @@ export async function registerRoutes(
       const result = await generatePhotofunia(effectId, textInputs, imageUrl);
       return res.json(result);
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message || "PhotoFunia generation failed" });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message || "PhotoFunia generation failed" });
     }
   });
 
@@ -1385,7 +1385,7 @@ export async function registerRoutes(
         const result = await fn(param);
         return res.json(result);
       } catch (error: any) {
-        return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message });
+        return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message });
       }
     });
   });
@@ -1394,9 +1394,9 @@ export async function registerRoutes(
   app.get("/api/anime/:type", async (req, res) => {
     try {
       const result = await fetchAnimeImage(req.params.type);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result });
     } catch (error: any) {
-      return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message });
+      return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message });
     }
   });
 
@@ -1404,9 +1404,9 @@ export async function registerRoutes(
   app.get("/api/fun/:type", async (req, res) => {
     try {
       const result = await getFunContent(req.params.type);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result });
     } catch (error: any) {
-      return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message });
+      return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message });
     }
   });
 
@@ -1414,18 +1414,18 @@ export async function registerRoutes(
   app.get("/api/short/:service", async (req, res) => {
     try {
       const url = req.query.url as string;
-      if (!url) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Missing 'url' query parameter" });
+      if (!url) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Missing 'url' query parameter" });
       const result = await shortenUrl(req.params.service, url);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result });
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message });
     }
   });
 
   app.post("/api/url/imgbb", async (req, res) => {
     try {
       const { image } = req.body;
-      if (!image) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Missing 'image' parameter" });
+      if (!image) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Missing 'image' parameter" });
       let imageData = image;
       if (image.startsWith("http")) {
         const imgRes = await fetch(image, { redirect: "follow" });
@@ -1439,18 +1439,18 @@ export async function registerRoutes(
       const data = await uploadRes.json() as any;
       if (data.status_code !== 200 && !data.image) throw new Error(data.error?.message || data.status_txt || "Image upload failed");
       return res.json({
-        success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+        success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
         result: { url: data.image?.url || data.image?.display_url, display_url: data.image?.display_url, thumb: data.image?.thumb?.url, medium: data.image?.medium?.url, title: data.image?.title, size: data.image?.size, width: data.image?.width, height: data.image?.height },
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message });
     }
   });
 
   app.post("/api/url/catbox", async (req, res) => {
     try {
       const { url } = req.body;
-      if (!url) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Missing 'url' parameter" });
+      if (!url) return res.status(400).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Missing 'url' parameter" });
       const imgRes = await fetch(url, { redirect: "follow" });
       if (!imgRes.ok) throw new Error("Failed to fetch file from URL");
       const buffer = Buffer.from(await imgRes.arrayBuffer());
@@ -1467,14 +1467,14 @@ export async function registerRoutes(
       const uploadRes = await fetch("https://catbox.moe/user/api.php", { method: "POST", headers: { "Content-Type": `multipart/form-data; boundary=${boundary}` }, body });
       const result = await uploadRes.text();
       if (!result.startsWith("https://")) throw new Error("Catbox upload failed: " + result);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: { url: result.trim(), original: url, service: "Catbox.moe" } });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: { url: result.trim(), original: url, service: "Catbox.moe" } });
     } catch (error: any) {
-      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: error.message });
+      return res.status(500).json({ success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: error.message });
     }
   });
 
   // ─── TOOLS ─────────────────────────────────────────────────────────────────
-  const creatorTag = "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech";
+  const creatorTag = "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech";
   app.get("/api/tools/qrcode", (req, res) => { const text = req.query.text as string; if (!text) return res.status(400).json({ success: false, error: "Missing 'text' parameter" }); return res.json({ success: true, creator: creatorTag, result: tools.generateQRCode(text, parseInt(req.query.size as string) || 300) }); });
   app.get("/api/tools/bible", async (req, res) => { try { return res.json({ success: true, creator: creatorTag, result: await tools.getBibleVerse(req.query.ref as string) }); } catch (e: any) { return res.status(400).json({ success: false, creator: creatorTag, error: e.message }); } });
   app.get("/api/tools/dictionary", async (req, res) => { try { const word = req.query.word as string; if (!word) return res.status(400).json({ success: false, error: "Missing 'word'" }); return res.json({ success: true, creator: creatorTag, result: await tools.getDictionary(word) }); } catch (e: any) { return res.status(400).json({ success: false, creator: creatorTag, error: e.message }); } });
@@ -1593,84 +1593,84 @@ app.get("/api/endpoints/categories", (req, res) => { return res.json({ success: 
 app.get("/api/endpoints/category/:name", (req, res) => { const result = getEndpointsByCategory(req.params.name); if (!result) return res.status(404).json({ error: "Category not found" }); return res.json({ success: true, result }); });
 app.get("/api/endpoints/stats", (req, res) => { return res.json({ success: true, result: getMethodStats() }); });
   app.get("/api/admin/provider-health", (_req, res) => { return res.json({ success: true, creator: creatorTag, providers: ["ytdlp", "fabdl", "cobalt", "piped", "y2mate"], note: "Providers are tried in order. Failed providers are on 5-minute cooldown." }); });
-app.get("/api/zodiac/all", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", signs: getAllZodiacSigns() }); });
-app.get("/api/zodiac/:sign", (req, res) => { const result = getZodiacSign(req.params.sign); if (!result) return res.status(404).json({ error: "Sign not found" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); });
-app.get("/api/zodiac/element/:element", (req, res) => { const signs = getZodiacByElement(req.params.element); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", element: req.params.element, signs }); });
-app.get("/api/zodiac/compatibility/:s1/:s2", (req, res) => { const result = getCompatibility(req.params.s1, req.params.s2); if (!result) return res.status(404).json({ error: "Signs not found" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); });
-app.get("/api/game/rps", (req, res) => { const move = req.query.move as string; const result = playRPS(move); if (!result) return res.status(400).json({ error: "Invalid move. Use: rock, paper, or scissors" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); });
-app.get("/api/game/flag-guess", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: guessCountry() }); });
-app.get("/api/game/flag-guess/:id/check", (req, res) => { const answer = req.query.answer as string; const result = checkCountryGuess(req.params.id, answer); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); });
-app.get("/api/game/word-scramble", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getWordScramble() }); });
-app.get("/api/game/number-guess", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: startNumberGame() }); });
-app.post("/api/game/number-guess/:id", (req, res) => { const guess = parseInt(req.body?.guess); if (isNaN(guess)) return res.status(400).json({ error: "Missing guess in body" }); const result = guessNumber(req.params.id, guess); if (!result) return res.status(404).json({ error: "Game not found" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); });
+app.get("/api/zodiac/all", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", signs: getAllZodiacSigns() }); });
+app.get("/api/zodiac/:sign", (req, res) => { const result = getZodiacSign(req.params.sign); if (!result) return res.status(404).json({ error: "Sign not found" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); });
+app.get("/api/zodiac/element/:element", (req, res) => { const signs = getZodiacByElement(req.params.element); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", element: req.params.element, signs }); });
+app.get("/api/zodiac/compatibility/:s1/:s2", (req, res) => { const result = getCompatibility(req.params.s1, req.params.s2); if (!result) return res.status(404).json({ error: "Signs not found" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); });
+app.get("/api/game/rps", (req, res) => { const move = req.query.move as string; const result = playRPS(move); if (!result) return res.status(400).json({ error: "Invalid move. Use: rock, paper, or scissors" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); });
+app.get("/api/game/flag-guess", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: guessCountry() }); });
+app.get("/api/game/flag-guess/:id/check", (req, res) => { const answer = req.query.answer as string; const result = checkCountryGuess(req.params.id, answer); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); });
+app.get("/api/game/word-scramble", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getWordScramble() }); });
+app.get("/api/game/number-guess", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: startNumberGame() }); });
+app.post("/api/game/number-guess/:id", (req, res) => { const guess = parseInt(req.body?.guess); if (isNaN(guess)) return res.status(400).json({ error: "Missing guess in body" }); const result = guessNumber(req.params.id, guess); if (!result) return res.status(404).json({ error: "Game not found" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); });
 
-app.get("/api/news/tuko", async (req, res) => { try { const result = await scrapeTukoNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/news/nation", async (req, res) => { try { const result = await scrapeNationNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/education/papers", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const page = parseInt(req.query.page as string) || 1; const result = await searchAcademicPapers(q, page); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/education/books", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const page = parseInt(req.query.page as string) || 1; const result = await searchBooks(q, page); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/education/dictionary", async (req, res) => { try { const word = req.query.word || req.query.q as string; if (!word) return res.status(400).json({ error: "Missing word" }); const result = await lookupWord(word); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/education/book-details", async (req, res) => { try { const key = req.query.key as string; if (!key) return res.status(400).json({ error: "Missing key (e.g. /works/OL8112804W)" }); const result = await getBookDetails(key); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/news/tuko", async (req, res) => { try { const result = await scrapeTukoNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/news/nation", async (req, res) => { try { const result = await scrapeNationNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/education/papers", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const page = parseInt(req.query.page as string) || 1; const result = await searchAcademicPapers(q, page); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/education/books", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const page = parseInt(req.query.page as string) || 1; const result = await searchBooks(q, page); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/education/dictionary", async (req, res) => { try { const word = req.query.word || req.query.q as string; if (!word) return res.status(400).json({ error: "Missing word" }); const result = await lookupWord(word); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/education/book-details", async (req, res) => { try { const key = req.query.key as string; if (!key) return res.status(400).json({ error: "Missing key (e.g. /works/OL8112804W)" }); const result = await getBookDetails(key); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
   // ─── MEDIA STATUS ──────────────────────────────────────────────────────────
-// DISABLED: app.get("/api/news/kenyans", async (req, res) => { try { const result = await scrapeKenyansNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/news/tuko", async (req, res) => { try { const result = await scrapeTukoNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-// DISABLED: app.get("/api/news/standard", async (req, res) => { try { const result = await scrapeStandardNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/news/nation", async (req, res) => { try { const result = await scrapeNationNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-// DISABLED: app.get("/api/classifieds/jiji", async (req, res) => { try { const result = await scrapeJijiClassifieds(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-// DISABLED: app.get("/api/classifieds/pigiame", async (req, res) => { try { const result = await scrapePigiameClassifieds(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+// DISABLED: app.get("/api/news/kenyans", async (req, res) => { try { const result = await scrapeKenyansNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/news/tuko", async (req, res) => { try { const result = await scrapeTukoNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+// DISABLED: app.get("/api/news/standard", async (req, res) => { try { const result = await scrapeStandardNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/news/nation", async (req, res) => { try { const result = await scrapeNationNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+// DISABLED: app.get("/api/classifieds/jiji", async (req, res) => { try { const result = await scrapeJijiClassifieds(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+// DISABLED: app.get("/api/classifieds/pigiame", async (req, res) => { try { const result = await scrapePigiameClassifieds(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
   let statusCache: { data: any; expiresAt: number } | null = null;
-app.get("/api/jobs/kenya", async (req, res) => { try { const page = parseInt(req.query.page as string) || 1; const result = await scrapeKenyaJobs(page); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/fun-data/kenyan-proverb", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getKenyanProverb() }); });
-app.get("/api/fun-data/dad-joke", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getDadJoke() }); });
-app.get("/api/fun-data/affirmation", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getAffirmation() }); });
-app.get("/api/fun-data/swahili-phrase", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getSwahiliPhrase() }); });
-app.get("/api/fun-data/kenyan-proverbs", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", count: getAllKenyanProverbs().length, results: getAllKenyanProverbs() }); });
-app.get("/api/fun-data/swahili-phrases", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", count: getAllSwahiliPhrases().length, results: getAllSwahiliPhrases() }); });
+app.get("/api/jobs/kenya", async (req, res) => { try { const page = parseInt(req.query.page as string) || 1; const result = await scrapeKenyaJobs(page); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/fun-data/kenyan-proverb", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getKenyanProverb() }); });
+app.get("/api/fun-data/dad-joke", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getDadJoke() }); });
+app.get("/api/fun-data/affirmation", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getAffirmation() }); });
+app.get("/api/fun-data/swahili-phrase", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getSwahiliPhrase() }); });
+app.get("/api/fun-data/kenyan-proverbs", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", count: getAllKenyanProverbs().length, results: getAllKenyanProverbs() }); });
+app.get("/api/fun-data/swahili-phrases", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", count: getAllSwahiliPhrases().length, results: getAllSwahiliPhrases() }); });
   async function probeUrl(url: string, opts: RequestInit = {}, timeoutMs = 6000): Promise<boolean> { const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs); try { const res = await fetch(url, { ...opts, signal: controller.signal }); return res.status < 500; } catch { return false; } finally { clearTimeout(timer); } }
-app.get("/api/fun-data/kenyan-proverb", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getKenyanProverb() }); });
-app.get("/api/fun-data/dad-joke", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getDadJoke() }); });
-app.get("/api/fun/tech-joke", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getTechJoke() }); });
-app.get("/api/fun-data/affirmation", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getAffirmation() }); });
-app.get("/api/fun-data/swahili-phrase", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getSwahiliPhrase() }); });
-app.get("/api/fun/never-have-i-ever", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getNeverHaveIEver() }); });
-app.get("/api/fun/fortune-cookie", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: getFortuneCookie() }); });
-app.get("/api/fun-data/kenyan-proverbs", (req, res) => { const limit = parseInt(req.query.limit as string) || 10; return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", count: Math.min(limit, KENYAN_PROVERBS.length), results: getAllKenyanProverbs().slice(0, limit) }); });
-app.get("/api/fun-data/swahili-phrases", (req, res) => { const limit = parseInt(req.query.limit as string) || 10; return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", count: Math.min(limit, getAllSwahiliPhrases().length), results: getAllSwahiliPhrases().slice(0, limit) }); });
+app.get("/api/fun-data/kenyan-proverb", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getKenyanProverb() }); });
+app.get("/api/fun-data/dad-joke", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getDadJoke() }); });
+app.get("/api/fun/tech-joke", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getTechJoke() }); });
+app.get("/api/fun-data/affirmation", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getAffirmation() }); });
+app.get("/api/fun-data/swahili-phrase", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getSwahiliPhrase() }); });
+app.get("/api/fun/never-have-i-ever", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getNeverHaveIEver() }); });
+app.get("/api/fun/fortune-cookie", (req, res) => { return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: getFortuneCookie() }); });
+app.get("/api/fun-data/kenyan-proverbs", (req, res) => { const limit = parseInt(req.query.limit as string) || 10; return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", count: Math.min(limit, KENYAN_PROVERBS.length), results: getAllKenyanProverbs().slice(0, limit) }); });
+app.get("/api/fun-data/swahili-phrases", (req, res) => { const limit = parseInt(req.query.limit as string) || 10; return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", count: Math.min(limit, getAllSwahiliPhrases().length), results: getAllSwahiliPhrases().slice(0, limit) }); });
   app.get("/api/media/status", async (_req, res) => { if (statusCache && Date.now() < statusCache.expiresAt) return res.json(statusCache.data); const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"; const [ytdlp, fabdl, cobalt, piped, y2mate, invidious, ytdown, tiktok, igraphql, spotify, shazam] = await Promise.all([ (async () => { try { await execAsync("yt-dlp --version", { timeout: 4000 }); return true; } catch { return false; } })(), probeUrl("https://api.fabdl.com/youtube/get?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DdQw4w9WgXcQ&type=mp3", { headers: { "User-Agent": UA } }), probeUrl("https://instances.cobalt.best/api/instances.json", { headers: { "User-Agent": UA } }), probeUrl("https://piped-instances.kavin.rocks/", { headers: { "User-Agent": UA } }), probeUrl("https://v1.y2mate.nu/", { headers: { "User-Agent": UA } }), probeUrl("https://invidious.privacyredirect.com/api/v1/stats", { headers: { "User-Agent": UA } }), probeUrl("https://app.ytdown.to/en23/", { headers: { "User-Agent": UA } }), probeUrl("https://ssstik.io/", { headers: { "User-Agent": UA } }), probeUrl("https://www.instagram.com/", { headers: { "User-Agent": UA } }), probeUrl("https://spotdown.org/", { headers: { "User-Agent": UA } }), probeUrl("https://www.shazam.com/", { headers: { "User-Agent": UA } }), ]); const data = { success: true, creator: creatorTag, checkedAt: new Date().toISOString(), categories: { music: { providers: { ytdlp: { active: ytdlp, label: "yt-dlp" }, invidious: { active: invidious, label: "Invidious" }, ytdown: { active: ytdown, label: "YTDown" }, fabdl: { active: fabdl, label: "FabDL" }, cobalt: { active: cobalt, label: "Cobalt" }, piped: { active: piped, label: "Piped" }, y2mate: { active: y2mate, label: "Y2Mate" } } }, "social-media": { providers: { tiktok: { active: tiktok, label: "TikTok (ssstik)" }, instagram: { active: igraphql, label: "Instagram" }, cobalt: { active: cobalt, label: "Cobalt" }, ytdlp: { active: ytdlp, label: "yt-dlp" } } }, spotify: { providers: { spotdown: { active: spotify, label: "Spotdown" } } }, shazam: { providers: { shazam: { active: shazam, label: "Shazam" } } } } }; statusCache = { data, expiresAt: Date.now() + 2 * 60 * 1000 }; return res.json(data); });
-app.get("/api/search/youtube", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const result = await youtubeSearch(q); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/youtube/trending", async (req, res) => { try { const result = await youtubeTrending(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/youtube/recommend", async (req, res) => { try { const vid = req.query.id || req.query.v as string; if (!vid) return res.status(400).json({ error: "Missing video id" }); const result = await youtubeRecommend(vid); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/music/search", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const result = await musicSearch(q); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/music/trending", async (req, res) => { try { const result = await musicTrending(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/music/artist", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q (artist name)" }); const result = await artistSearch(q); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/search/youtube", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const result = await youtubeSearch(q); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/youtube/trending", async (req, res) => { try { const result = await youtubeTrending(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/youtube/recommend", async (req, res) => { try { const vid = req.query.id || req.query.v as string; if (!vid) return res.status(400).json({ error: "Missing video id" }); const result = await youtubeRecommend(vid); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/music/search", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q" }); const result = await musicSearch(q); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/music/trending", async (req, res) => { try { const result = await musicTrending(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/music/artist", async (req, res) => { try { const q = req.query.q as string; if (!q) return res.status(400).json({ error: "Missing q (artist name)" }); const result = await artistSearch(q); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
 
-app.get("/api/bible/ai", async (req, res) => { try { const question = req.query.q || req.query.question as string; if (!question) return res.status(400).json({ error: "Missing question (?q=...)" }); const translation = (req.query.translation as string) || "ESV"; const result = await bibleAI(question, translation); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/soundcloud/download", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await soundcloudDownload(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/soundcloud/search", async (req, res) => { try { const query = req.query.q as string; if (!query) return res.status(400).json({ error: "Missing query (?q=...)" }); const limit = parseInt(req.query.limit as string) || 10; const result = await soundcloudSearch(query, limit); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/bible/ai", async (req, res) => { try { const question = req.query.q || req.query.question as string; if (!question) return res.status(400).json({ error: "Missing question (?q=...)" }); const translation = (req.query.translation as string) || "ESV"; const result = await bibleAI(question, translation); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/soundcloud/download", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await soundcloudDownload(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/soundcloud/search", async (req, res) => { try { const query = req.query.q as string; if (!query) return res.status(400).json({ error: "Missing query (?q=...)" }); const limit = parseInt(req.query.limit as string) || 10; const result = await soundcloudSearch(query, limit); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
   // ─── PROXY & STREAM ────────────────────────────────────────────────────────
-app.get("/api/news/global", async (req, res) => { try { const result = await getGlobalNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/news/kenya", async (req, res) => { try { const result = await getKenyaNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/crypto/price", async (req, res) => { try { const coin = (req.query.coin as string) || "bitcoin"; const result = await getCryptoPrice(coin); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/crypto/all", async (req, res) => { try { const result = await getAllCryptos(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/forex/rates", async (req, res) => { try { const result = await getForexRates(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/forex/convert", async (req, res) => { try { const amount = parseFloat(req.query.amount as string) || 1; const from = (req.query.from as string) || "USD"; const to = (req.query.to as string) || "KES"; const result = await convertForex(amount, from, to); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/news/global", async (req, res) => { try { const result = await getGlobalNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/news/kenya", async (req, res) => { try { const result = await getKenyaNews(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/crypto/price", async (req, res) => { try { const coin = (req.query.coin as string) || "bitcoin"; const result = await getCryptoPrice(coin); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/crypto/all", async (req, res) => { try { const result = await getAllCryptos(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", ...result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/forex/rates", async (req, res) => { try { const result = await getForexRates(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/forex/convert", async (req, res) => { try { const amount = parseFloat(req.query.amount as string) || 1; const from = (req.query.from as string) || "USD"; const to = (req.query.to as string) || "KES"; const result = await convertForex(amount, from, to); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
   app.get("/stream", async (req, res) => { const q = (req.query.q || req.query.url) as string; const type = ((req.query.type as string) || "mp3").toLowerCase() === "mp4" ? "mp4" : "mp3"; if (!q) return res.status(400).json({ error: "Missing q or url param" }); try { let videoUrl = q; if (!isYouTubeUrl(q)) { const searchResults = await searchSongs(q.trim()); if (!searchResults.items || searchResults.items.length === 0) return res.status(404).json({ error: `No results found for "${q}"` }); videoUrl = `https://www.youtube.com/watch?v=${searchResults.items[0].id}`; } const info = await getDownloadInfo(videoUrl, type as "mp3" | "mp4"); if (!info || !info.success || !info.downloadUrl) return res.status(500).json({ error: (info as any)?.error || "Failed to get download URL" }); const { downloadUrl, title } = info as { downloadUrl: string; title: string }; const safeName = (title || "download").replace(/[^a-zA-Z0-9_\- ]/g, "").trim() || "download"; const fileRes = await fetch(downloadUrl, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36", "Accept": "*/*", "Referer": "https://www.youtube.com/" }, redirect: "follow" }); if (!fileRes.ok) return res.status(fileRes.status).json({ error: `CDN returned ${fileRes.status}` }); const contentType = fileRes.headers.get("content-type") || (type === "mp4" ? "video/mp4" : "audio/mpeg"); res.setHeader("Content-Type", contentType); res.setHeader("Content-Disposition", `attachment; filename="${safeName}.${type}"`); res.setHeader("Cache-Control", "no-cache"); if (!fileRes.body) return res.status(502).json({ error: "No response body from CDN" }); const { Readable } = await import("stream"); const nodeStream = Readable.fromWeb(fileRes.body as import("stream/web").ReadableStream); nodeStream.pipe(res); nodeStream.on("error", (err) => { if (!res.headersSent) res.status(500).json({ error: err.message }); }); } catch (err: any) { if (!res.headersSent) res.status(500).json({ error: err.message }); } });
-app.get("/api/tools/phone-lookup", (req, res) => { try { const phone = req.query.phone as string; if (!phone) return res.status(400).json({ error: "Missing phone" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: phoneLookup(phone) }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/tools/password-audit", (req, res) => { try { const password = req.query.password as string; if (!password) return res.status(400).json({ error: "Missing password" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result: passwordAudit(password) }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/tools/dns-inspector", async (req, res) => { try { const domain = req.query.domain as string; if (!domain) return res.status(400).json({ error: "Missing domain" }); const result = await dnsInspector(domain); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/tools/wifi-scan", (req, res) => { try { const result = wifiScan(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/tools/phone-lookup", (req, res) => { try { const phone = req.query.phone as string; if (!phone) return res.status(400).json({ error: "Missing phone" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: phoneLookup(phone) }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/tools/password-audit", (req, res) => { try { const password = req.query.password as string; if (!password) return res.status(400).json({ error: "Missing password" }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result: passwordAudit(password) }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/tools/dns-inspector", async (req, res) => { try { const domain = req.query.domain as string; if (!domain) return res.status(400).json({ error: "Missing domain" }); const result = await dnsInspector(domain); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/tools/wifi-scan", (req, res) => { try { const result = wifiScan(); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
 
-app.post("/api/scrape/full", async (req, res) => { try { const { url, options } = req.body || {}; if (!url) return res.status(400).json({ error: "Missing url in body" }); const result = await masterScrape(url, options || {}); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.post("/api/scrape/full", async (req, res) => { try { const { url, options } = req.body || {}; if (!url) return res.status(400).json({ error: "Missing url in body" }); const result = await masterScrape(url, options || {}); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
   app.get("/proxy", async (req, res) => { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url param" }); let origin = "https://www.youtube.com"; try { origin = new URL(url).origin; } catch {} const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"; const upstreamHeaders: Record<string, string> = { "User-Agent": UA, "Accept": "*/*", "Accept-Language": "en-US,en;q=0.9", "Accept-Encoding": "identity", "Referer": origin + "/", "Origin": origin, "Sec-Fetch-Dest": "video", "Sec-Fetch-Mode": "no-cors", "Sec-Fetch-Site": "cross-site", "DNT": "1", "Connection": "keep-alive" }; const rangeHeader = req.headers.range; if (rangeHeader) upstreamHeaders["Range"] = rangeHeader; try { const response = await fetch(url, { headers: upstreamHeaders, redirect: "follow" }); if (response.status === 403 || response.status === 401) return res.status(response.status).json({ error: `Upstream blocked (${response.status})` }); if (!response.ok && response.status !== 206) return res.status(response.status).json({ error: `Upstream returned ${response.status}` }); const contentType = response.headers.get("content-type") || "application/octet-stream"; res.setHeader("Content-Type", contentType); res.setHeader("Cache-Control", "no-cache"); res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Accept-Ranges", "bytes"); res.status(response.status); if (!response.body) return res.status(502).json({ error: "No response body" }); const { Readable } = await import("stream"); const nodeStream = Readable.fromWeb(response.body as import("stream/web").ReadableStream); nodeStream.pipe(res); nodeStream.on("error", (err: any) => { if (!res.headersSent) res.status(500).json({ error: err.message }); }); } catch (err: any) { if (!res.headersSent) res.status(500).json({ error: err.message }); } });
-app.post("/api/tools/deobfuscate", async (req, res) => { try { const { code } = req.body || {}; if (!code) return res.status(400).json({ error: "Missing code in body" }); const result = deobfuscate(code); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.post("/api/tools/deminify", async (req, res) => { try { const { code, language } = req.body || {}; if (!code) return res.status(400).json({ error: "Missing code in body" }); const result = deminify(code, language || "js"); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.post("/api/tools/run-js", async (req, res) => { try { const { code, data } = req.body || {}; if (!code) return res.status(400).json({ error: "Missing code in body" }); const result = runInSandbox(code, data); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/tools/headless", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const cookies = req.query.cookies as string; const result = await fetchHeadless(url, { cookies, followRedirects: true }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.post("/api/tools/decode", async (req, res) => { try { const { text } = req.body || {}; if (!text) return res.status(400).json({ error: "Missing text in body" }); const result = autoDecode(text); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.post("/api/tools/deobfuscate", async (req, res) => { try { const { code } = req.body || {}; if (!code) return res.status(400).json({ error: "Missing code in body" }); const result = deobfuscate(code); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.post("/api/tools/deminify", async (req, res) => { try { const { code, language } = req.body || {}; if (!code) return res.status(400).json({ error: "Missing code in body" }); const result = deminify(code, language || "js"); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.post("/api/tools/run-js", async (req, res) => { try { const { code, data } = req.body || {}; if (!code) return res.status(400).json({ error: "Missing code in body" }); const result = runInSandbox(code, data); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/tools/headless", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const cookies = req.query.cookies as string; const result = await fetchHeadless(url, { cookies, followRedirects: true }); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.post("/api/tools/decode", async (req, res) => { try { const { text } = req.body || {}; if (!text) return res.status(400).json({ error: "Missing text in body" }); const result = autoDecode(text); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
 
-app.get("/api/scrape/links", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await extractLinks(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/scrape/inspect", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await inspectSite(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/scrape/scripts", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await extractScripts(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
-app.get("/api/scrape/cookies", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await getCookies(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/scrape/links", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await extractLinks(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/scrape/inspect", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await inspectSite(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/scrape/scripts", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await extractScripts(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
+app.get("/api/scrape/cookies", async (req, res) => { try { const url = req.query.url as string; if (!url) return res.status(400).json({ error: "Missing url" }); const result = await getCookies(url); return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", result }); } catch (e: any) { return res.status(500).json({ error: e.message }); } });
   registerSocialRoutes(app);
   registerMediaRoutes(app);
   return httpServer;

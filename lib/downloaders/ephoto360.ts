@@ -187,7 +187,7 @@ export async function generateEphoto(effectSlug: string, texts: string[]): Promi
     });
 
     if (!pageRes.ok) {
-      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: `Effect page not found (${pageRes.status})` };
+      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: `Effect page not found (${pageRes.status})` };
     }
 
     const pageHtml = await pageRes.text();
@@ -198,7 +198,7 @@ export async function generateEphoto(effectSlug: string, texts: string[]): Promi
     const buildServerIdMatch = pageHtml.match(/name="build_server_id"\s+value="([^"]+)"/);
 
     if (!tokenMatch || !buildServerMatch) {
-      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Could not extract form tokens" };
+      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Could not extract form tokens" };
     }
 
     const token = tokenMatch[1];
@@ -240,7 +240,7 @@ export async function generateEphoto(effectSlug: string, texts: string[]): Promi
 
     const formValueMatch = postHtml.match(/form_value_input"\s+value="([^"]+)"/);
     if (!formValueMatch) {
-      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Could not extract form value for image generation" };
+      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Could not extract form value for image generation" };
     }
 
     const formValueRaw = formValueMatch[1]
@@ -254,7 +254,7 @@ export async function generateEphoto(effectSlug: string, texts: string[]): Promi
     try {
       formValue = JSON.parse(formValueRaw);
     } catch {
-      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Invalid form value data" };
+      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Invalid form value data" };
     }
 
     const createData = new URLSearchParams();
@@ -302,19 +302,19 @@ export async function generateEphoto(effectSlug: string, texts: string[]): Promi
     }
 
     if (!imageResult || !imageResult.success || !imageResult.image) {
-      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: "Image generation failed after multiple attempts" };
+      return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: "Image generation failed after multiple attempts" };
     }
 
     const imageUrl = `${formValue.build_server}${imageResult.image}`;
 
     return {
       success: true,
-      creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech",
+      creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech",
       effectName,
       imageUrl,
     };
   } catch (err: any) {
-    return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", error: err.message || "Ephoto360 generation failed" };
+    return { success: false, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", error: err.message || "Ephoto360 generation failed" };
   }
 }
 

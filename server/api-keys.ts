@@ -37,7 +37,7 @@ export function registerApiKeyRoutes(app: Express) {
         "INSERT INTO api_keys (key, name, rate_limit, active) VALUES (?, ?, 50, 1)",
         [apikey, name || "Free User"]
       );
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Free User", rate_limit: 50 } });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", key: { key: apikey, name: name || "Free User", rate_limit: 50 } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
@@ -51,7 +51,7 @@ export function registerApiKeyRoutes(app: Express) {
       if (!keyData.length) return res.status(404).json({ success: false, error: "Key not found" });
       const today = new Date().toISOString().split("T")[0];
       const usage = await d1Query("SELECT count FROM usage WHERE api_key = ? AND date = ?", [key, today]);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", key: keyData[0], usage: { today: usage[0]?.count || 0 } });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", key: keyData[0], usage: { today: usage[0]?.count || 0 } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
@@ -66,7 +66,7 @@ export function registerApiKeyRoutes(app: Express) {
         "INSERT INTO api_keys (key, user_id, name, rate_limit, active, created_by) VALUES (?, ?, ?, ?, 1, ?)",
         [apikey, userId || null, name || "Untitled", rate_limit, "admin_001"]
       );
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", key: { key: apikey, name: name || "Untitled", rate_limit } });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", key: { key: apikey, name: name || "Untitled", rate_limit } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
@@ -76,7 +76,7 @@ export function registerApiKeyRoutes(app: Express) {
   app.get("/api/admin/keys", async (_req: Request, res: Response) => {
     try {
       const keys = await d1Query("SELECT * FROM api_keys ORDER BY created_at DESC");
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", keys });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", keys });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
@@ -91,7 +91,7 @@ export function registerApiKeyRoutes(app: Express) {
       if (active !== undefined) await d1Query("UPDATE api_keys SET active = ? WHERE key = ?", [active ? 1 : 0, key]);
       if (name) await d1Query("UPDATE api_keys SET name = ? WHERE key = ?", [name, key]);
       const updated = await d1Query("SELECT * FROM api_keys WHERE key = ?", [key]);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", key: updated[0] });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", key: updated[0] });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
@@ -102,7 +102,7 @@ export function registerApiKeyRoutes(app: Express) {
     try {
       const { key } = req.params;
       await d1Query("UPDATE api_keys SET active = 0 WHERE key = ?", [key]);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", message: `Key ${key} revoked` });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", message: `Key ${key} revoked` });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
@@ -115,7 +115,7 @@ export function registerApiKeyRoutes(app: Express) {
       const today = new Date().toISOString().split("T")[0];
       const todayUsage = await d1Query("SELECT count FROM usage WHERE api_key = ? AND date = ?", [key, today]);
       const total = await d1Query("SELECT SUM(count) as total FROM usage WHERE api_key = ?", [key]);
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", today: todayUsage[0]?.count || 0, total: total[0]?.total || 0 });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", today: todayUsage[0]?.count || 0, total: total[0]?.total || 0 });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }
@@ -127,7 +127,7 @@ export function registerApiKeyRoutes(app: Express) {
       const { email, password } = req.body || {};
       const user = await d1Query("SELECT * FROM users WHERE email = ? AND password = ? AND active = 1", [email, password]);
       if (!user.length) return res.status(401).json({ success: false, error: "Invalid credentials" });
-      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech", user: { username: user[0].username, api_key: user[0].api_key, coins: user[0].coins, is_admin: !!user[0].is_admin } });
+      return res.json({ success: true, creator: "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech", user: { username: user[0].username, api_key: user[0].api_key, coins: user[0].coins, is_admin: !!user[0].is_admin } });
     } catch (e: any) {
       return res.status(500).json({ success: false, error: e.message });
     }

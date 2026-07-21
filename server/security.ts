@@ -197,7 +197,7 @@ export function responseFingerprint(_req: Request, res: Response, next: NextFunc
       body.api_name = "Megan APIs";
       body.version = "3.6.4";
       body.creator = "Tracker Wanga";
-      body.tech = "Falcon Tech";
+      body.tech = "Megan Tech";
     }
     return originalJson(body);
   };

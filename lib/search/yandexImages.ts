@@ -69,7 +69,7 @@ function htmlEntityDecode(s: string): string {
 }
 
 function parseHtml(html: string, query: string, page: number): YandexImageSearchResponse {
-  const creator = "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech";
+  const creator = "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech";
 
   if (html.includes("Are you not a robot") || html.includes("checkcaptcha")) {
     throw new Error("Blocked by Yandex bot detection (CAPTCHA)");
@@ -167,7 +167,7 @@ export async function searchYandexImages(
   query: string,
   page = 0
 ): Promise<YandexImageSearchResponse> {
-  const creator = "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech";
+  const creator = "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech";
   try {
     const targetUrl = `https://yandex.com/images/touch/search?lr=21312&text=${encodeURIComponent(query)}&p=${page}`;
     const html = await fetchViaProxy(targetUrl);

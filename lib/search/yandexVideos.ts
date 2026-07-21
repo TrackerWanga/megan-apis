@@ -144,7 +144,7 @@ export async function searchYandexVideos(
   query: string,
   page = 0
 ): Promise<YandexVideoSearchResponse> {
-  const creator = "Megan APIs v3.6.4 | Tracker Wanga | Falcon Tech";
+  const creator = "Megan APIs v3.6.4 | Tracker Wanga | Megan Tech";
   try {
     const targetUrl = `https://yandex.com/video/touch/search?text=${encodeURIComponent(query)}&p=${page}&format=json`;
     const raw = await fetchViaProxy(targetUrl);
